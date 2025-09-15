@@ -47,18 +47,26 @@ const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
     setError('');
 
+    console.log('[LOGIN] Intentando iniciar sesión con:', {
+      email: loginForm.email,
+      password: loginForm.password
+    });
+
     try {
       // Solo Supabase Auth
       const user = await supabaseManager.signIn(loginForm.email, loginForm.password);
+      console.log('[LOGIN] Resultado de signIn:', user);
       if (user) {
+        console.log('[LOGIN] Login exitoso, usuario:', user);
         onLogin(user);
         onClose();
         resetForms();
       } else {
+        console.warn('[LOGIN] Credenciales inválidas para:', loginForm.email);
         setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('[LOGIN] Error al iniciar sesión:', error);
       setError('Error al iniciar sesión. Inténtalo de nuevo.');
     } finally {
       setLoading(false);

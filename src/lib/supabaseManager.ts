@@ -1,7 +1,73 @@
+  // Auth: Login con email y password usando Supabase Auth
+  async signIn(email: string, password: string): Promise<User | null> {
+    try {
+      console.log('[SUPABASE] signIn con', email);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        console.error('[SUPABASE] Error en signIn:', error);
+        return null;
+      }
+      if (!data.user) {
+        console.warn('[SUPABASE] No se encontró usuario en signIn');
+        return null;
+      }
+      // Buscar datos extendidos del usuario en la tabla users
+      const userDb = await this.getUserByEmail(email);
+      if (!userDb) {
+        // Si no hay datos extendidos, devolver lo básico
+        return {
+          id: data.user.id,
+          name: data.user.user_metadata?.name || data.user.email,
+          email: data.user.email,
+          profileImage: data.user.user_metadata?.avatar_url || '',
+          avatar: data.user.user_metadata?.avatar_url || '',
+          role: 'user',
+          createdAt: new Date(data.user.created_at)
+        };
+      }
+      return userDb;
+    } catch (error) {
+      console.error('[SUPABASE] Excepción en signIn:', error);
+      return null;
+    }
+  }
 import { supabase } from './supabase';
 import { Event, User, Comment } from '@/types';
 
 class SupabaseManager {
+  // Auth: Login con email y password usando Supabase Auth
+  async signIn(email: string, password: string): Promise<User | null> {
+    try {
+      console.log('[SUPABASE] signIn con', email);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        console.error('[SUPABASE] Error en signIn:', error);
+        return null;
+      }
+      if (!data.user) {
+        console.warn('[SUPABASE] No se encontró usuario en signIn');
+        return null;
+      }
+      // Buscar datos extendidos del usuario en la tabla users
+      const userDb = await this.getUserByEmail(email);
+      if (!userDb) {
+        // Si no hay datos extendidos, devolver lo básico
+        return {
+          id: data.user.id,
+          name: data.user.user_metadata?.name || data.user.email,
+          email: data.user.email,
+          profileImage: data.user.user_metadata?.avatar_url || '',
+          avatar: data.user.user_metadata?.avatar_url || '',
+          role: 'user',
+          createdAt: new Date(data.user.created_at)
+        };
+      }
+      return userDb;
+    } catch (error) {
+      console.error('[SUPABASE] Excepción en signIn:', error);
+      return null;
+    }
+  }
   private isConnected = false;
 
   async initialize(): Promise<boolean> {
