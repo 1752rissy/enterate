@@ -169,6 +169,9 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <DialogTitle className="text-center text-2xl font-bold text-gray-900">
             Entérate
           </DialogTitle>
+          <div className="text-center text-xs text-gray-500 mt-1 mb-2">
+            desarrollado por Andres Gutierrez
+          </div>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
