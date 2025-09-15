@@ -19,13 +19,16 @@ export default function CreateEventForm({ onSubmit, onCancel }: CreateEventFormP
     date: '',
     time: '',
     location: '',
-    imageUrl: ''
+    imageUrl: '',
+    category: '',
+    customCategory: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
+
 
     if (!formData.title.trim()) {
       newErrors.title = 'El título es obligatorio';
@@ -57,6 +60,13 @@ export default function CreateEventForm({ onSubmit, onCancel }: CreateEventFormP
       }
     }
 
+    if (!formData.category) {
+      newErrors.category = 'El tipo de evento es obligatorio';
+    }
+    if (formData.category === 'Otro' && !formData.customCategory.trim()) {
+      newErrors.customCategory = 'Por favor especifica el tipo de evento';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -65,7 +75,11 @@ export default function CreateEventForm({ onSubmit, onCancel }: CreateEventFormP
     e.preventDefault();
     
     if (validateForm()) {
-      onSubmit(formData);
+      const eventData = {
+        ...formData,
+        category: formData.category === 'Otro' ? formData.customCategory : formData.category
+      };
+      onSubmit(eventData);
     }
   };
 
@@ -88,7 +102,42 @@ export default function CreateEventForm({ onSubmit, onCancel }: CreateEventFormP
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Título */}
+            {/* Tipo de Evento Emocional */}
+            <div className="space-y-2">
+              <Label htmlFor="category">Tipo de Evento *</Label>
+              <select
+                id="category"
+                value={formData.category}
+                onChange={e => {
+                  handleInputChange('category', e.target.value);
+                  if (e.target.value !== 'Otro') {
+                    handleInputChange('customCategory', '');
+                  }
+                }}
+                className={`w-full border rounded-md p-2 ${errors.category ? 'border-red-500' : ''}`}
+              >
+                <option value="">Selecciona una opción</option>
+                <option value="Juntada para charlar">Juntada para charlar</option>
+                <option value="Salir a correr">Salir a correr</option>
+                <option value="Mateada en la plaza">Mateada en la plaza</option>
+                <option value="Paseo con mascotas">Paseo con mascotas</option>
+                <option value="Descubrimiento local">Descubrimiento local</option>
+                <option value="Otro">Otro</option>
+              </select>
+              {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
+              {formData.category === 'Otro' && (
+                <div className="mt-2">
+                  <Input
+                    id="customCategory"
+                    value={formData.customCategory}
+                    onChange={e => handleInputChange('customCategory', e.target.value)}
+                    placeholder="Especifica el tipo de evento..."
+                    className={errors.customCategory ? 'border-red-500' : ''}
+                  />
+                  {errors.customCategory && <p className="text-red-500 text-sm">{errors.customCategory}</p>}
+                </div>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="title">Título del Evento *</Label>
               <Input
