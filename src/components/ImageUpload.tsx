@@ -1,43 +1,33 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Upload, X, Image as ImageIcon, Link } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 
 export interface ImageUploadProps {
   value: File | null;
   onChange: (file: File | null) => void;
-  import React, { useState, useRef } from 'react';
-  import { Button } from '@/components/ui/button';
-  import { Label } from '@/components/ui/label';
-  import { Upload, X } from 'lucide-react';
+  label?: string;
+}
 
-  export interface ImageUploadProps {
-    value: File | null;
-    onChange: (file: File | null) => void;
-    label?: string;
-  }
+const ImageUpload: React.FC<ImageUploadProps> = ({ value, onChange, label = "Imagen del Evento" }) => {
+  const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  export default function ImageUpload({ value, onChange, label = "Imagen del Evento" }: ImageUploadProps) {
-    const [error, setError] = useState('');
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        if (!file.type.startsWith('image/')) {
-          setError('Por favor selecciona un archivo de imagen válido');
-          return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-          setError('El archivo es demasiado grande. Máximo 5MB permitido');
-          return;
-        }
-        setError('');
-        onChange(file);
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setError('Por favor selecciona un archivo de imagen válido');
+        return;
       }
-    };
+      if (file.size > 5 * 1024 * 1024) {
+        setError('El archivo es demasiado grande. Máximo 5MB permitido');
+        return;
+      }
+      setError('');
+      onChange(file);
+    }
+  };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -126,31 +116,6 @@ export interface ImageUploadProps {
         )}
       </div>
     );
-  }
-                onClick={clearImage}
-                className="text-red-600 hover:text-red-700"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="aspect-video w-full max-w-xs mx-auto">
-              <img
-                src={URL.createObjectURL(value)}
-                alt="Vista previa"
-                className="w-full h-full object-cover rounded"
-                onError={() => setError('Error al cargar la imagen')}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+  };
 
-      {/* Error Message */}
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-    </div>
-  );
-}
+  export default ImageUpload;
