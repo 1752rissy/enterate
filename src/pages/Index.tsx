@@ -38,6 +38,30 @@ const Index: React.FC = () => {
   const [supabaseConnected, setSupabaseConnected] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCreateEventForm, setShowCreateEventForm] = useState(false);
+  // Crear evento
+  const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => {
+    const newEvent: Event = {
+      ...eventData,
+      id: Date.now().toString(),
+      organizerName: currentUser?.name || 'Anónimo',
+      createdBy: currentUser?.id || '',
+      likes: 0,
+      likedBy: [],
+      comments: [],
+      attendees: [],
+      createdAt: new Date(),
+    };
+    if (supabaseConnected) {
+      await supabaseManager.createEvent(newEvent);
+      const updatedEvents = await supabaseManager.getEvents();
+      setEvents(updatedEvents);
+    } else {
+      setEvents(prev => [...prev, newEvent]);
+      localStorage.setItem('enterate-events', JSON.stringify([...events, newEvent]));
+    }
+    setShowCreateEventForm(false);
+  };
 
   const categories = ['Música', 'Gastronomía', 'Turismo', 'Cultura', 'Deportes', 'Arte'];
 
@@ -411,6 +435,17 @@ const Index: React.FC = () => {
           </TabsList>
 
           <TabsContent value="events" className="space-y-4 sm:space-y-6">
+            {/* Botón agregar evento para usuarios registrados */}
+            {currentUser && (
+              <div className="mb-4 flex justify-end">
+                <Button
+                  onClick={() => setShowCreateEventForm(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Agregar evento
+                </Button>
+              </div>
+            )}
             {/* Search and Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -470,6 +505,16 @@ const Index: React.FC = () => {
               currentUser={currentUser}
               supabaseConnected={supabaseConnected}
             />
+
+            {/* Formulario de creación de evento */}
+            {showCreateEventForm && currentUser && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <CreateEventForm
+                  onSubmit={handleCreateEvent}
+                  onCancel={() => setShowCreateEventForm(false)}
+                />
+              </div>
+            )}
           </TabsContent>
 
           {canManageEvents && (
