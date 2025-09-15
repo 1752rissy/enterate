@@ -466,14 +466,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
 
                   {/* Comments List - Scrollable within the main scroll area */}
                     <div
-                      className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white"
-                      style={{
-                        maxHeight: '40vh',
-                        minHeight: '120px',
-                        // Responsive maxHeight for larger screens
-                        ...(window.innerWidth >= 640 ? { maxHeight: '50vh' } : {}),
-                        ...(window.innerWidth >= 1024 ? { maxHeight: '60vh' } : {})
-                      }}
+                      className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white max-h-60 min-h-[120px] sm:max-h-80 lg:max-h-[60vh]"
                     >
                     {comments.length === 0 ? (
                       <p className="text-gray-500 text-center py-8 text-sm">
