@@ -508,18 +508,85 @@ const Index: React.FC = () => {
               supabaseConnected={supabaseConnected}
             />
 
-            {/* Formulario de creación de evento como modal Dialog (igual que moderador) */}
-            <Dialog open={showCreateEventForm} onOpenChange={setShowCreateEventForm}>
-              <DialogContent className="max-w-full w-[90vw] sm:w-[600px] mx-auto max-h-[90vh] overflow-y-auto p-6 rounded-2xl shadow-xl">
-                <DialogHeader>
-                  <DialogTitle>Crear Nuevo Evento</DialogTitle>
-                </DialogHeader>
-                <CreateEventForm
-                  onSubmit={handleCreateEvent}
-                  onCancel={() => setShowCreateEventForm(false)}
-                />
-              </DialogContent>
-            </Dialog>
+            {/* Nuevo modal de creación de evento básico */}
+            {showCreateEventForm && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 mx-2">
+                  <h2 className="text-2xl font-bold mb-4 text-center">Crear Evento</h2>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const form = e.target as HTMLFormElement;
+                      const data = {
+                        title: form.title.value,
+                        description: form.description.value,
+                        date: form.date.value,
+                        time: form.time.value,
+                        location: form.location.value,
+                        max_capacity: form.max_capacity.value ? Number(form.max_capacity.value) : null,
+                        image_url: form.image_url.value,
+                        category: '',
+                        organizer_name: currentUser?.name || '',
+                        created_by: currentUser?.id || '',
+                        likes: 0,
+                        liked_by: [],
+                        attendees: [],
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                      };
+                      if (supabaseConnected) {
+                        await supabaseManager.createEvent({
+                          ...data,
+                          price: 0,
+                        });
+                        const updatedEvents = await supabaseManager.getEvents();
+                        setEvents(updatedEvents);
+                      } else {
+                        setEvents(prev => [...prev, data]);
+                        localStorage.setItem('enterate-events', JSON.stringify([...events, data]));
+                      }
+                      setShowCreateEventForm(false);
+                    }}
+                  >
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium mb-1">Título del evento</label>
+                      <input name="title" type="text" required className="w-full border rounded px-3 py-2" placeholder="Ej: Festival de música" />
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium mb-1">Descripción breve</label>
+                      <textarea name="description" required className="w-full border rounded px-3 py-2" rows={2} placeholder="Describe el evento..." />
+                    </div>
+                    <div className="mb-3 flex gap-2">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium mb-1">Fecha</label>
+                        <input name="date" type="date" required className="w-full border rounded px-3 py-2" />
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium mb-1">Hora</label>
+                        <input name="time" type="time" required className="w-full border rounded px-3 py-2" />
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium mb-1">Ubicación</label>
+                      <input name="location" type="text" required className="w-full border rounded px-3 py-2" placeholder="Ej: Plaza 9 de Julio" />
+                      <div className="text-xs text-gray-500 mt-1">(Próximamente: mapa interactivo)</div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium mb-1">Cupo máximo (opcional)</label>
+                      <input name="max_capacity" type="number" min="1" className="w-full border rounded px-3 py-2" placeholder="Ej: 100" />
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium mb-1">Imagen (URL)</label>
+                      <input name="image_url" type="url" required className="w-full border rounded px-3 py-2" placeholder="https://ejemplo.com/imagen.jpg" />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 font-semibold">Crear Evento</button>
+                      <button type="button" className="flex-1 border rounded px-4 py-2" onClick={() => setShowCreateEventForm(false)}>Cancelar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {canManageEvents && (
