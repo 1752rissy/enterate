@@ -510,7 +510,7 @@ const Index: React.FC = () => {
 
             {/* Formulario de creación de evento como modal Dialog (igual que moderador) */}
             <Dialog open={showCreateEventForm} onOpenChange={setShowCreateEventForm}>
-              <DialogContent className="w-full max-w-lg sm:max-w-2xl mx-auto max-h-[90vh] overflow-y-auto p-0">
+              <DialogContent className="w-full max-w-md sm:max-w-xl mx-auto max-h-[90vh] overflow-y-auto p-6 rounded-2xl shadow-xl flex flex-col justify-center items-center">
                 <DialogHeader>
                   <DialogTitle>Crear Nuevo Evento</DialogTitle>
                 </DialogHeader>
