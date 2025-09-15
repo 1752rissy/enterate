@@ -201,7 +201,7 @@ const ModeratorEventManager: React.FC<ModeratorEventManagerProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+  <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -211,7 +211,12 @@ const ModeratorEventManager: React.FC<ModeratorEventManagerProps> = ({
         
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button
+              onClick={() => {
+                resetForm();
+                setSelectedEvent(null);
+              }}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Crear Evento
             </Button>
