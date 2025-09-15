@@ -506,15 +506,18 @@ const Index: React.FC = () => {
               supabaseConnected={supabaseConnected}
             />
 
-            {/* Formulario de creación de evento */}
-            {showCreateEventForm && currentUser && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            {/* Formulario de creación de evento como modal Dialog (igual que moderador) */}
+            <Dialog open={showCreateEventForm} onOpenChange={setShowCreateEventForm}>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Crear Nuevo Evento</DialogTitle>
+                </DialogHeader>
                 <CreateEventForm
                   onSubmit={handleCreateEvent}
                   onCancel={() => setShowCreateEventForm(false)}
                 />
-              </div>
-            )}
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           {canManageEvents && (
