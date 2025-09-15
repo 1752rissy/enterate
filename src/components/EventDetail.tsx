@@ -447,7 +447,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                         onClick={handleAddComment}
                         disabled={commentLoading || !newComment.trim()}
                         size="sm"
-                        className="w-full sm:w-auto"
+                        className="w-full md:w-auto px-6 py-2 text-base md:text-sm"
                       >
                         <Send className="w-4 h-4 mr-2" />
                         {commentLoading ? 'Enviando...' : 'Enviar comentario'}
@@ -465,7 +465,16 @@ const EventDetail: React.FC<EventDetailProps> = ({
                   )}
 
                   {/* Comments List - Scrollable within the main scroll area */}
-                    <div className="space-y-4 max-h-96 overflow-y-auto pr-2 border rounded-md bg-white">
+                    <div
+                      className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white"
+                      style={{
+                        maxHeight: '40vh',
+                        minHeight: '120px',
+                        // Responsive maxHeight for larger screens
+                        ...(window.innerWidth >= 640 ? { maxHeight: '50vh' } : {}),
+                        ...(window.innerWidth >= 1024 ? { maxHeight: '60vh' } : {})
+                      }}
+                    >
                     {comments.length === 0 ? (
                       <p className="text-gray-500 text-center py-8 text-sm">
                         No hay comentarios aún. ¡Sé el primero en comentar!

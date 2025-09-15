@@ -48,30 +48,14 @@ const AuthModal: React.FC<AuthModalProps> = ({
     setError('');
 
     try {
-      if (supabaseConnected) {
-        // Use Supabase authentication
-        const user = await supabaseManager.signIn(loginForm.email, loginForm.password);
-        if (user) {
-          onLogin(user);
-          onClose();
-          resetForms();
-        } else {
-          setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
-        }
+      // Solo Supabase Auth
+      const user = await supabaseManager.signIn(loginForm.email, loginForm.password);
+      if (user) {
+        onLogin(user);
+        onClose();
+        resetForms();
       } else {
-        // Use localStorage authentication
-        const storedUsers = JSON.parse(localStorage.getItem('enterate-users') || '[]');
-        const user = storedUsers.find((u: UserType) => 
-          u.email === loginForm.email && u.password === loginForm.password
-        );
-        
-        if (user) {
-          onLogin(user);
-          onClose();
-          resetForms();
-        } else {
-          setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
-        }
+        setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -193,6 +177,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
           )}
 
           <TabsContent value="login" className="space-y-4 mt-4">
+
+            {/* Formulario de inicio de sesión clásico */}
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="login-email">Email</Label>
