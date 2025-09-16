@@ -20,6 +20,15 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
   const [error, setError] = useState('');
 
   // Upload a file to Supabase Storage and get public URL
+    const categories = [
+      'Juntada para charlar',
+      'Salir a correr',
+      'Mateada en la plaza',
+      'Paseo con mascotas',
+      'Descubrimiento local',
+      'Música',
+      'Otro'
+    ];
   const handleFileUpload = async (file: File) => {
     setUploading(true);
     setError('');
@@ -58,8 +67,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               location: form.location.value,
               max_capacity: form.max_capacity.value ? Number(form.max_capacity.value) : null,
               imageUrl: imageUrl,
-              category: form.category?.value || '',
-              organizerName: currentUser?.name || '',
+                category: form.category.value,
               createdBy: currentUser?.id || '',
               likes: 0,
               likedBy: [],
@@ -101,6 +109,15 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             <textarea name="description" required className="w-full border rounded px-3 py-2" rows={2} placeholder="Describe el evento..." />
           </div>
           <div className="mb-3 flex gap-2">
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Categoría del evento</label>
+              <select name="category" required className="w-full border rounded px-3 py-2">
+                <option value="" disabled selected>Selecciona una categoría</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1">Fecha</label>
               <input name="date" type="date" required className="w-full border rounded px-3 py-2" />
