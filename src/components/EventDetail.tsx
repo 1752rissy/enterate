@@ -48,7 +48,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
   const [commentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
-    console.log('cambio realizado');
+  // ...existing code...
   }, []);
 
   useEffect(() => {
@@ -429,7 +429,6 @@ const EventDetail: React.FC<EventDetailProps> = ({
                     <MessageCircle className="w-5 h-5 mr-2" />
                     <h3 className="text-lg font-semibold flex items-center gap-2">
                       Comentarios ({comments.length})
-                      <span className="text-xs text-green-600 font-normal">cambio realizado</span>
                     </h3>
                   </div>
 
