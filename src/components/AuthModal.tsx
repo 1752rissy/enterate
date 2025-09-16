@@ -17,6 +17,8 @@ interface AuthModalProps {
   supabaseConnected: boolean;
 }
 
+
+
 const AuthModal: React.FC<AuthModalProps> = ({ 
   isOpen, 
   onClose, 
