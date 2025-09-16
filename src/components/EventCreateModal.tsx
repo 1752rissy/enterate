@@ -14,6 +14,7 @@ interface EventCreateModalProps {
 const BUCKET_NAME = 'event-images';
 
 export default function EventCreateModal({ currentUser, supabaseConnected, setShowCreateEventForm, setEvents, events }: EventCreateModalProps) {
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
@@ -45,7 +46,8 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.target as any;
-            const data = {
+            const newEvent = {
+              id: Date.now().toString(),
               title: form.title.value,
               description: form.description.value,
               date: form.date.value,
@@ -59,19 +61,30 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               likes: 0,
               liked_by: [],
               attendees: [],
+              comments: [],
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             };
             if (supabaseConnected) {
               await supabaseManager.createEvent({
-                ...data,
+                ...newEvent,
                 price: 0,
               });
               const updatedEvents = await supabaseManager.getEvents();
               setEvents(updatedEvents);
             } else {
-              setEvents((prev: any) => [...prev, data]);
-              localStorage.setItem('enterate-events', JSON.stringify([...events, data]));
+              setEvents((prev: any) => [...prev, newEvent]);
+              const storedEvents = localStorage.getItem('enterate-events');
+              let eventsArr = [];
+              if (storedEvents) {
+                try {
+                  eventsArr = JSON.parse(storedEvents);
+                } catch {
+                  eventsArr = [];
+                }
+              }
+              eventsArr.push(newEvent);
+              localStorage.setItem('enterate-events', JSON.stringify(eventsArr));
             }
             setShowCreateEventForm(false);
           }}
@@ -105,20 +118,26 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
           </div>
           <div className="mb-3">
             <ImageUpload
-              value={imageUrl}
-              onChange={async (val: string) => {
-                if (typeof val === 'string' && val.startsWith('data:image')) {
-                  // Si es base64, subir a Supabase Storage
-                  const res = await fetch(val);
-                  const blob = await res.blob();
-                  await handleFileUpload(new File([blob], `event_${Date.now()}.png`, { type: blob.type }));
+              value={imageFile}
+              onChange={async (file: File | null) => {
+                setImageFile(file);
+                if (file) {
+                  await handleFileUpload(file);
                 } else {
-                  setImageUrl(val);
+                  setImageUrl('');
                 }
               }}
               label="Imagen del Evento"
-              placeholder="URL o subir archivo"
             />
+            {imageFile && (
+              <div className="mt-2">
+                <img
+                  src={URL.createObjectURL(imageFile)}
+                  alt="Vista previa"
+                  className="w-full h-32 object-cover rounded-md"
+                />
+              </div>
+            )}
             {uploading && <div className="text-sm text-blue-600 mt-2">Subiendo imagen...</div>}
             {error && <div className="text-sm text-red-600 mt-2">{error}</div>}
           </div>
