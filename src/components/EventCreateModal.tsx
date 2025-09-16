@@ -66,17 +66,16 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               end_time: form.end_time.value,
               location: form.location.value,
               category: form.category.value,
-              image_url: imageUrl,
+              imageUrl: imageUrl, // url pública de la imagen subida al bucket
               price: 0,
-              organizer_name: currentUser?.name || '',
-              created_by: currentUser?.id || '',
+              organizerName: currentUser?.name || '',
+              createdBy: currentUser?.id || '',
             };
             if (supabaseConnected) {
               await supabaseManager.createEvent(newEvent);
               const updatedEvents = await supabaseManager.getEvents();
               setEvents(updatedEvents);
             } else {
-              // Para localStorage, puedes guardar el evento con los campos extra si lo deseas
               setEvents((prev: any) => [...prev, newEvent]);
               const storedEvents = localStorage.getItem('enterate-events');
               let eventsArr = [];
