@@ -495,7 +495,7 @@ const Index: React.FC = () => {
               )}
               <AlertDescription className={`text-sm ${supabaseConnected ? "text-green-800" : "text-orange-800"}`}>
                 {supabaseConnected 
-                  ? "🔗 Conectado a Supabase - Los eventos se sincronizan en tiempo real desde la base de datos." 
+                  ? ""
                   : "💾 Trabajando en modo offline - Los eventos se cargan desde el almacenamiento local."
                 }
               </AlertDescription>
