@@ -27,12 +27,15 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}_${currentUser?.id}.${fileExt}`;
       const { error: uploadError } = await supabase.storage.from(BUCKET_NAME).upload(fileName, file);
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        setError(`Error al subir la imagen: ${uploadError.message}`);
+        return;
+      }
       // Get public URL
       const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
       setImageUrl(urlData.publicUrl);
-    } catch (err) {
-      setError('Error al subir la imagen');
+    } catch (err: any) {
+      setError(`Error inesperado: ${err?.message || err}`);
     } finally {
       setUploading(false);
     }
