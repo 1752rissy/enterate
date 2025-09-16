@@ -59,32 +59,24 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             e.preventDefault();
             const form = e.target as any;
             const newEvent = {
-              id: Date.now().toString(),
               title: form.title.value,
               description: form.description.value,
               date: form.date.value,
               time: form.time.value,
               end_time: form.end_time.value,
               location: form.location.value,
-              max_capacity: form.max_capacity.value ? Number(form.max_capacity.value) : null,
-              imageUrl: imageUrl,
-                category: form.category.value,
-              createdBy: currentUser?.id || '',
-              likes: 0,
-              likedBy: [],
-              attendees: [],
-              comments: [],
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              category: form.category.value,
+              image_url: imageUrl,
+              price: 0,
+              organizer_name: currentUser?.name || '',
+              created_by: currentUser?.id || '',
             };
             if (supabaseConnected) {
-              await supabaseManager.createEvent({
-                ...newEvent,
-                price: 0,
-              });
+              await supabaseManager.createEvent(newEvent);
               const updatedEvents = await supabaseManager.getEvents();
               setEvents(updatedEvents);
             } else {
+              // Para localStorage, puedes guardar el evento con los campos extra si lo deseas
               setEvents((prev: any) => [...prev, newEvent]);
               const storedEvents = localStorage.getItem('enterate-events');
               let eventsArr = [];
