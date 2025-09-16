@@ -39,7 +39,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 mx-2">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 mx-2 max-h-screen overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-center">Crear Evento</h2>
         <form
           onSubmit={async (e) => {
