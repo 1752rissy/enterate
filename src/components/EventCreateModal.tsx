@@ -54,16 +54,16 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               time: form.time.value,
               location: form.location.value,
               max_capacity: form.max_capacity.value ? Number(form.max_capacity.value) : null,
-              image_url: imageUrl,
-              category: '',
-              organizer_name: currentUser?.name || '',
-              created_by: currentUser?.id || '',
+              imageUrl: imageUrl,
+              category: form.category?.value || '',
+              organizerName: currentUser?.name || '',
+              createdBy: currentUser?.id || '',
               likes: 0,
-              liked_by: [],
+              likedBy: [],
               attendees: [],
               comments: [],
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
+              createdAt: new Date(),
+              updatedAt: new Date(),
             };
             if (supabaseConnected) {
               await supabaseManager.createEvent({
@@ -120,6 +120,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             <ImageUpload
               value={imageFile}
               onChange={async (file: File | null) => {
+                setError('');
                 setImageFile(file);
                 if (file) {
                   await handleFileUpload(file);
@@ -129,10 +130,10 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               }}
               label="Imagen del Evento"
             />
-            {imageFile && (
+            {imageUrl && (
               <div className="mt-2">
                 <img
-                  src={URL.createObjectURL(imageFile)}
+                  src={imageUrl}
                   alt="Vista previa"
                   className="w-full h-32 object-cover rounded-md"
                 />
