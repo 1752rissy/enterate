@@ -79,7 +79,6 @@ export class SupabaseService {
       const { data, error } = await supabase
         .from('app_f6a677c6d3_events')
         .insert([{
-          id: event.id,
           title: event.title,
           description: event.description,
           date: event.date,

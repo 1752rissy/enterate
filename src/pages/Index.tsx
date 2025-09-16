@@ -42,27 +42,43 @@ const Index: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
-  // Crear evento
-  const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => {
+  const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'attendees' | 'createdAt' | 'updatedAt' | 'createdBy'>) => {
+    if (!currentUser) {
+      // Opcional: Muestra un mensaje al usuario para que inicie sesión
+      return;
+    }
+  
     const newEvent: Event = {
       ...eventData,
-      id: Date.now().toString(),
-      organizerName: currentUser?.name || 'Anónimo',
-      createdBy: currentUser?.id || '',
+      id: '', // Supabase generará el id
+      organizerName: currentUser.name,
+      createdBy: currentUser.id,
       likes: 0,
       likedBy: [],
       comments: [],
       attendees: [],
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
+  
+    console.log('Creating event:', newEvent);
+  
     if (supabaseConnected) {
-      await supabaseManager.createEvent(newEvent);
-      const updatedEvents = await supabaseManager.getEvents();
-      setEvents(updatedEvents);
+      const createdEvent = await supabaseManager.createEvent(newEvent);
+      if (createdEvent) {
+        const updatedEvents = await supabaseManager.getEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to create event in Supabase');
+        // Opcional: Muestra un mensaje de error al usuario
+      }
     } else {
-      setEvents(prev => [...prev, newEvent]);
-      localStorage.setItem('enterate-events', JSON.stringify([...events, newEvent]));
+      // Lógica para modo offline (si aplica)
+      const localEvent = { ...newEvent, id: Date.now().toString() };
+      setEvents(prev => [...prev, localEvent]);
+      localStorage.setItem('enterate-events', JSON.stringify([...events, localEvent]));
     }
+  
     setShowCreateEventForm(false);
   };
 
@@ -511,12 +527,9 @@ const Index: React.FC = () => {
 
             {/* Nuevo modal de creación de evento básico */}
             {showCreateEventForm && (
-              <EventCreateModal
-                currentUser={currentUser}
-                supabaseConnected={supabaseConnected}
-                setShowCreateEventForm={setShowCreateEventForm}
-                setEvents={setEvents}
-                events={events}
+              <CreateEventForm
+                onSubmit={handleCreateEvent}
+                onCancel={() => setShowCreateEventForm(false)}
               />
             )}
           </TabsContent>

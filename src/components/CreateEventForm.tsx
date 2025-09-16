@@ -8,7 +8,7 @@ import { CalendarIcon, Clock, MapPin, Image, X } from 'lucide-react';
 import { Event } from '@/types';
 
 interface CreateEventFormProps {
-  onSubmit: (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => void;
+  onSubmit: (eventData: Omit<Event, 'id' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'attendees' | 'createdAt' | 'updatedAt' | 'createdBy'>) => void;
   onCancel: () => void;
 }
 
