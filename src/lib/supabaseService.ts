@@ -77,7 +77,7 @@ export class SupabaseService {
   async createEvent(event: Event): Promise<Event | null> {
     try {
       const { data, error } = await supabase
-        .from('events')
+        .from('app_f6a677c6d3_events')
         .insert([{
           id: event.id,
           title: event.title,
@@ -108,7 +108,7 @@ export class SupabaseService {
   async getEvents(): Promise<Event[]> {
     try {
       const { data, error } = await supabase
-        .from('events')
+        .from('app_f6a677c6d3_events')
         .select(`
           *,
           event_interactions(user_id, type),
@@ -128,7 +128,7 @@ export class SupabaseService {
   async updateEvent(event: Event): Promise<Event | null> {
     try {
       const { data, error } = await supabase
-        .from('events')
+        .from('app_f6a677c6d3_events')
         .update({
           title: event.title,
           description: event.description,
@@ -162,7 +162,7 @@ export class SupabaseService {
       
       // Delete the event
       const { error } = await supabase
-        .from('events')
+        .from('app_f6a677c6d3_events')
         .delete()
         .eq('id', eventId);
 
