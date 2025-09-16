@@ -52,7 +52,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 mx-2 max-h-screen overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-8 mx-2 max-h-screen overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-center">Crear Evento</h2>
         <form
           onSubmit={async (e) => {
@@ -109,8 +109,8 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             <label className="block text-sm font-medium mb-1">Descripción breve</label>
             <textarea name="description" required className="w-full border rounded px-3 py-2" rows={2} placeholder="Describe el evento..." />
           </div>
-          <div className="mb-3 flex gap-2">
-            <div className="mb-3">
+          <div className="mb-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <label className="block text-sm font-medium mb-1">Categoría</label>
               <select name="category" required className="w-full border rounded px-3 py-2">
                 <option value="" disabled selected>Selecciona una categoría</option>
@@ -119,15 +119,17 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
                 ))}
               </select>
             </div>
-            <div className="flex-1">
+            <div>
               <label className="block text-sm font-medium mb-1">Fecha</label>
               <input name="date" type="date" required className="w-full border rounded px-3 py-2" />
             </div>
-            <div className="flex-1">
+          </div>
+          <div className="mb-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <label className="block text-sm font-medium mb-1">Hora de inicio</label>
               <input name="time" type="time" required className="w-full border rounded px-3 py-2" />
             </div>
-            <div className="flex-1">
+            <div>
               <label className="block text-sm font-medium mb-1">Hora de finalización</label>
               <input name="end_time" type="time" required className="w-full border rounded px-3 py-2" />
             </div>
