@@ -64,6 +64,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               description: form.description.value,
               date: form.date.value,
               time: form.time.value,
+              end_time: form.end_time.value,
               location: form.location.value,
               max_capacity: form.max_capacity.value ? Number(form.max_capacity.value) : null,
               imageUrl: imageUrl,
@@ -110,7 +111,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
           </div>
           <div className="mb-3 flex gap-2">
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Categoría del evento</label>
+              <label className="block text-sm font-medium mb-1">Categoría</label>
               <select name="category" required className="w-full border rounded px-3 py-2">
                 <option value="" disabled selected>Selecciona una categoría</option>
                 {categories.map((cat) => (
@@ -123,8 +124,12 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               <input name="date" type="date" required className="w-full border rounded px-3 py-2" />
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium mb-1">Hora</label>
+              <label className="block text-sm font-medium mb-1">Hora de inicio</label>
               <input name="time" type="time" required className="w-full border rounded px-3 py-2" />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium mb-1">Hora de finalización</label>
+              <input name="end_time" type="time" required className="w-full border rounded px-3 py-2" />
             </div>
           </div>
           <div className="mb-3">
