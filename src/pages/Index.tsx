@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ImageUpload from '@/components/ImageUpload';
-import CreateEventForm from '@/components/CreateEventForm';
+import EventCreateModal from '@/components/EventCreateModal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -527,9 +527,12 @@ const Index: React.FC = () => {
 
             {/* Nuevo modal de creación de evento básico */}
             {showCreateEventForm && (
-              <CreateEventForm
-                onSubmit={handleCreateEvent}
-                onCancel={() => setShowCreateEventForm(false)}
+              <EventCreateModal
+                currentUser={currentUser}
+                supabaseConnected={supabaseConnected}
+                setShowCreateEventForm={setShowCreateEventForm}
+                setEvents={setEvents}
+                events={events}
               />
             )}
           </TabsContent>
