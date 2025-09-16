@@ -133,7 +133,8 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               }}
               label="Imagen del Evento"
             />
-            {imageUrl && (
+            {/* Solo mostrar la imagen subida si no hay archivo local pendiente */}
+            {imageUrl && !imageFile && (
               <div className="mt-2">
                 <img
                   src={imageUrl}
