@@ -1,0 +1,41 @@
+{
+  "models": [
+    {
+      "title": "Mi-Asistente-Local",
+      "provider": "ollama",
+      "model": "deepseek-coder:latest",
+      "contextLength": 16384,
+      "completionOptions": {
+        "temperature": 0.1,
+        "topP": 0.9,
+        "maxTokens": 2048
+      }
+    }
+  ],
+  "contextProviders": [
+    {
+      "name": "codebase",
+      "config": {
+        "ignoreFiles": [
+          "node_modules/**",
+          ".git/**",
+          "dist/**",
+          "build/**",
+          "*.lock",
+          "*.log"
+        ]
+      }
+    },
+    {
+      "name": "git",
+      "config": {
+        "branch": "main"
+      }
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Autocompletado-Local",
+    "provider": "ollama",
+    "model": "deepseek-coder:latest"
+  }
+}
