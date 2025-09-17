@@ -391,25 +391,38 @@ const EventDetail: React.FC<EventDetailProps> = ({
 
                   {/* Action Buttons */}
                   {currentUser && (
-                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                      <Button
-                        onClick={handleLike}
-                        disabled={loading}
-                        variant={isLiked ? "default" : "outline"}
-                        className={`flex-1 ${isLiked ? 'bg-red-500 hover:bg-red-600 text-white' : ''}`}
-                      >
-                        <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-white' : ''}`} />
-                        {isLiked ? 'Te gusta' : 'Me gusta'} ({likesCount})
-                      </Button>
+                    <div className="flex flex-col gap-3 pt-4">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button
+                          onClick={handleLike}
+                          disabled={loading}
+                          variant={isLiked ? "default" : "outline"}
+                          className={`flex-1 ${isLiked ? 'bg-red-500 hover:bg-red-600 text-white' : ''}`}
+                        >
+                          <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-white' : ''}`} />
+                          {isLiked ? 'Te gusta' : 'Me gusta'} ({likesCount})
+                        </Button>
 
+                        <Button
+                          onClick={handleAttendance}
+                          disabled={loading}
+                          variant={isAttending ? "default" : "outline"}
+                          className={`flex-1 ${isAttending ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
+                        >
+                          <Users className={`w-4 h-4 mr-2 ${isAttending ? 'text-white' : ''}`} />
+                          {isAttending ? 'Asistiré' : 'Asistiré'} ({attendeesCount})
+                        </Button>
+                      </div>
                       <Button
-                        onClick={handleAttendance}
-                        disabled={loading}
-                        variant={isAttending ? "default" : "outline"}
-                        className={`flex-1 ${isAttending ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
+                        type="button"
+                        className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
+                        onClick={() => {
+                          const shareText = `¡Mirá este evento! ${event.title} - ${window.location.href}`;
+                          window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+                        }}
                       >
-                        <Users className={`w-4 h-4 mr-2 ${isAttending ? 'text-white' : ''}`} />
-                        {isAttending ? 'Asistiré' : 'Asistiré'} ({attendeesCount})
+                        <Share2 className="w-4 h-4" />
+                        Compartir por WhatsApp
                       </Button>
                     </div>
                   )}
