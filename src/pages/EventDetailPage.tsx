@@ -64,18 +64,20 @@ const EventDetailPage: React.FC = () => {
           onEventUpdate={() => {}}
           supabaseConnected={supabaseConnected}
         />
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-6 mx-auto"
-          onClick={() => {
-            const eventUrl = `${window.location.origin}/evento/${event.id}`;
-            const shareText = `¡Mirá este evento! ${event.title} - ${eventUrl}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
-          }}
-        >
-          <Share2 className="w-4 h-4" />
-          Compartir por WhatsApp
-        </button>
+        <div className="flex justify-center mt-8">
+          <button
+            type="button"
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full px-6 py-3 shadow-lg text-lg"
+            onClick={() => {
+              const eventUrl = `${window.location.origin}/evento/${event.id}`;
+              const shareText = `¡Mirá este evento en Entérate!\n${event.title}\n${event.description}\n${eventUrl}`;
+              window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+            }}
+          >
+            <Share2 className="w-6 h-6" />
+            Compartir por WhatsApp
+          </button>
+        </div>
       </div>
     </div>
   );
