@@ -13,7 +13,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, currentUse
   const isAttending = event.attendees?.includes(currentUser?.id) || false;
 
   return (
-    <div 
+    <div
       className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
       onClick={onClick}
     >
@@ -26,7 +26,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, currentUse
           />
         </div>
       )}
-      
+
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
@@ -36,11 +36,11 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, currentUse
             {event.category}
           </Badge>
         </div>
-        
+
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
           {event.description}
         </p>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center text-sm text-gray-500">
             <Calendar className="w-4 h-4 mr-2" />
@@ -55,7 +55,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, currentUse
             {event.location}
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">

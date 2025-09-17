@@ -11,6 +11,7 @@ import {
   Users, 
   Heart, 
   MessageCircle, 
+  Share2,
   Send,
   X,
   DollarSign,
