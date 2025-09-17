@@ -20,15 +20,15 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
   const [error, setError] = useState('');
 
   // Upload a file to Supabase Storage and get public URL
-    const categories = [
-      'Juntada para charlar',
-      'Salir a correr',
-      'Mateada en la plaza',
-      'Paseo con mascotas',
-      'Descubrimiento local',
-      'Música',
-      'Otro'
-    ];
+  const categories = [
+    'Juntada para charlar',
+    'Salir a correr',
+    'Mateada en la plaza',
+    'Paseo con mascotas',
+    'Descubrimiento local',
+    'Música',
+    'Otro'
+  ];
   const handleFileUpload = async (file: File) => {
     setUploading(true);
     setError('');

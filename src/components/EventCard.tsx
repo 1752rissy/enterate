@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, MapPin, Heart, MessageCircle, Users } from 'lucide-react';
+import { Calendar, Clock, MapPin, Heart, MessageCircle, Users, Share2 } from 'lucide-react';
 
 interface EventCardProps {
   event: any;
