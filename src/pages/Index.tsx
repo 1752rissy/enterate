@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import UserProfileModal from '@/components/UserProfileModal';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ImageUpload from '@/components/ImageUpload';
 import EventCreateModal from '@/components/EventCreateModal';
@@ -42,6 +43,7 @@ const Index: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
   // Crear evento
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => {
     const newEvent: Event = {
@@ -324,7 +326,8 @@ const Index: React.FC = () => {
                       <img
                         src={currentUser.profileImage || currentUser.avatar}
                         alt={currentUser.name}
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8 rounded-full cursor-pointer"
+                        onClick={() => setShowUserProfile(true)}
                       />
                       <div className="text-sm hidden lg:block">
                         <p className="font-medium text-gray-900 truncate max-w-32">
@@ -380,7 +383,8 @@ const Index: React.FC = () => {
                 <img
                   src={currentUser.profileImage || currentUser.avatar}
                   alt={currentUser.name}
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full cursor-pointer"
+                  onClick={() => setShowUserProfile(true)}
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 truncate text-sm">
@@ -552,6 +556,19 @@ const Index: React.FC = () => {
         onClose={() => setIsAuthModalOpen(false)}
         onLogin={handleLogin}
       />
+
+      {/* User Profile Modal */}
+      {currentUser && showUserProfile && (
+        <UserProfileModal
+          isOpen={showUserProfile}
+          onClose={() => setShowUserProfile(false)}
+          user={{
+            nombre_completo: currentUser.name,
+            email: currentUser.email,
+            foto_perfil: currentUser.profileImage || currentUser.avatar || ''
+          }}
+        />
+      )}
     </div>
   );
 };
