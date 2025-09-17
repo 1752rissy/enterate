@@ -419,13 +419,15 @@ const EventDetail: React.FC<EventDetailProps> = ({
                       </div>
                       <Button
                         type="button"
-                        className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded px-4 py-2 mt-2"
+                        className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
                         onClick={() => {
-                          navigate(`/evento/${event.id}`);
+                          const eventUrl = `${window.location.origin}/evento/${event.id}`;
+                          const shareText = `¡Mirá este evento en Entérate!\n${event.title}\n${event.description}\n${eventUrl}`;
+                          window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
                         }}
                       >
                         <Share2 className="w-4 h-4" />
-                        Compartir
+                        Compartir por WhatsApp
                       </Button>
                     </div>
                   )}
