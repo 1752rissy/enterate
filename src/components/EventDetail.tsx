@@ -33,6 +33,7 @@ interface EventDetailProps {
   supabaseConnected: boolean;
 }
 
+
 const EventDetail: React.FC<EventDetailProps> = ({
   event,
   isOpen,
