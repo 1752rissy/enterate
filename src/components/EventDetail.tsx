@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Users, 
-  Heart, 
-  MessageCircle, 
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  Heart,
+  MessageCircle,
   Share2,
   Send,
   X,
@@ -49,7 +49,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
   const [commentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
-  // ...existing code...
+    // ...existing code...
   }, []);
 
   useEffect(() => {
@@ -58,12 +58,12 @@ const EventDetail: React.FC<EventDetailProps> = ({
       setLikesCount(event.likes || 0);
       setAttendeesCount(Array.isArray(event.attendees) ? event.attendees.length : 0);
       setComments(event.comments || []);
-      
+
       // Check user interactions
       if (currentUser) {
         const likedBy = Array.isArray(event.likedBy) ? event.likedBy : [];
         const attendees = Array.isArray(event.attendees) ? event.attendees : [];
-        
+
         setIsLiked(likedBy.includes(currentUser.id));
         setIsAttending(attendees.includes(currentUser.id));
       } else {
@@ -82,7 +82,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
     setLoading(true);
     try {
       const newLikedState = !isLiked;
-      
+
       // Update UI immediately for better UX
       setIsLiked(newLikedState);
       setLikesCount(prev => newLikedState ? prev + 1 : Math.max(0, prev - 1));
@@ -90,12 +90,12 @@ const EventDetail: React.FC<EventDetailProps> = ({
       if (supabaseConnected) {
         // Update in Supabase
         const success = await supabaseManager.updateEventInteraction(
-          event.id, 
-          currentUser.id, 
-          'like', 
+          event.id,
+          currentUser.id,
+          'like',
           newLikedState
         );
-        
+
         if (!success) {
           // Revert on failure
           setIsLiked(!newLikedState);
@@ -109,7 +109,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
         const updatedEvents = storedEvents.map((e: Event) => {
           if (e.id === event.id) {
             const likedBy = Array.isArray(e.likedBy) ? [...e.likedBy] : [];
-            
+
             if (newLikedState) {
               if (!likedBy.includes(currentUser.id)) {
                 likedBy.push(currentUser.id);
@@ -129,10 +129,10 @@ const EventDetail: React.FC<EventDetailProps> = ({
           }
           return e;
         });
-        
+
         localStorage.setItem('enterate-events', JSON.stringify(updatedEvents));
       }
-      
+
       // Refresh events list
       onEventUpdate();
     } catch (error) {
@@ -155,7 +155,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
     setLoading(true);
     try {
       const newAttendingState = !isAttending;
-      
+
       // Update UI immediately for better UX
       setIsAttending(newAttendingState);
       setAttendeesCount(prev => newAttendingState ? prev + 1 : Math.max(0, prev - 1));
@@ -163,12 +163,12 @@ const EventDetail: React.FC<EventDetailProps> = ({
       if (supabaseConnected) {
         // Update in Supabase
         const success = await supabaseManager.updateEventInteraction(
-          event.id, 
-          currentUser.id, 
-          'attend', 
+          event.id,
+          currentUser.id,
+          'attend',
           newAttendingState
         );
-        
+
         if (!success) {
           // Revert on failure
           setIsAttending(!newAttendingState);
@@ -182,7 +182,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
         const updatedEvents = storedEvents.map((e: Event) => {
           if (e.id === event.id) {
             const attendees = Array.isArray(e.attendees) ? [...e.attendees] : [];
-            
+
             if (newAttendingState) {
               if (!attendees.includes(currentUser.id)) {
                 attendees.push(currentUser.id);
@@ -201,10 +201,10 @@ const EventDetail: React.FC<EventDetailProps> = ({
           }
           return e;
         });
-        
+
         localStorage.setItem('enterate-events', JSON.stringify(updatedEvents));
       }
-      
+
       // Refresh events list
       onEventUpdate();
     } catch (error) {
@@ -257,7 +257,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
           ...comment,
           id: Date.now().toString()
         };
-        
+
         const storedEvents = JSON.parse(localStorage.getItem('enterate-events') || '[]');
         const updatedEvents = storedEvents.map((e: Event) => {
           if (e.id === event.id) {
@@ -269,9 +269,9 @@ const EventDetail: React.FC<EventDetailProps> = ({
           }
           return e;
         });
-        
+
         localStorage.setItem('enterate-events', JSON.stringify(updatedEvents));
-        
+
         setComments([...comments, commentWithId]);
         setNewComment('');
         onEventUpdate();
@@ -352,12 +352,12 @@ const EventDetail: React.FC<EventDetailProps> = ({
                       <Calendar className="w-4 h-4 mr-3 flex-shrink-0" />
                       <span className="text-sm sm:text-base">{formatDate(event.date)}</span>
                     </div>
-                    
+
                     <div className="flex items-center text-gray-600">
                       <Clock className="w-4 h-4 mr-3 flex-shrink-0" />
                       <span className="text-sm sm:text-base">{formatTime(event.time)}</span>
                     </div>
-                    
+
                     <div className="flex items-start text-gray-600">
                       <MapPin className="w-4 h-4 mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-sm sm:text-base">{event.location}</span>
@@ -401,7 +401,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                         <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-white' : ''}`} />
                         {isLiked ? 'Te gusta' : 'Me gusta'} ({likesCount})
                       </Button>
-                      
+
                       <Button
                         onClick={handleAttendance}
                         disabled={loading}
@@ -466,10 +466,10 @@ const EventDetail: React.FC<EventDetailProps> = ({
                   )}
 
                   {/* Comments List - Scrollable within the main scroll area */}
-                    <div
-                      className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white min-h-[120px] max-h-[40vh] sm:max-h-[60vh] lg:max-h-[60vh]"
-                      style={{ WebkitOverflowScrolling: 'touch', height: '100%', display: 'flex', flexDirection: 'column' }}
-                    >
+                  <div
+                    className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white min-h-[120px] max-h-[40vh] sm:max-h-[60vh] lg:max-h-[60vh]"
+                    style={{ WebkitOverflowScrolling: 'touch', height: '100%', display: 'flex', flexDirection: 'column' }}
+                  >
                     {comments.length === 0 ? (
                       <p className="text-gray-500 text-center py-8 text-sm">
                         No hay comentarios aún. ¡Sé el primero en comentar!
