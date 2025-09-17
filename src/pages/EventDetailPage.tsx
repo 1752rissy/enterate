@@ -64,18 +64,37 @@ const EventDetailPage: React.FC = () => {
           onEventUpdate={() => {}}
           supabaseConnected={supabaseConnected}
         />
-        <div className="flex justify-center mt-8">
+        <div className="flex flex-col items-center gap-4 mt-8">
           <button
             type="button"
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-full px-6 py-3 shadow-lg text-lg"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full px-6 py-3 shadow-lg text-lg"
             onClick={() => {
               const eventUrl = `${window.location.origin}/evento/${event.id}`;
               const shareText = `¡Mirá este evento en Entérate!\n${event.title}\n${event.description}\n${eventUrl}`;
-              window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+              if (navigator.share) {
+                navigator.share({
+                  title: event.title,
+                  text: `${event.title}\n${event.description}`,
+                  url: eventUrl
+                });
+              } else {
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+              }
             }}
           >
             <Share2 className="w-6 h-6" />
-            Compartir por WhatsApp
+            Compartir evento
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-full px-6 py-3 shadow text-base"
+            onClick={() => {
+              const eventUrl = `${window.location.origin}/evento/${event.id}`;
+              navigator.clipboard.writeText(eventUrl);
+              alert('Enlace copiado al portapapeles');
+            }}
+          >
+            Copiar enlace
           </button>
         </div>
       </div>
