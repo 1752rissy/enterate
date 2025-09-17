@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Share2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import EventDetail from '@/components/EventDetail';
 import { Event, User } from '@/types';
@@ -72,6 +73,7 @@ const EventDetailPage: React.FC = () => {
             window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
           }}
         >
+          <Share2 className="w-4 h-4" />
           Compartir por WhatsApp
         </button>
       </div>
