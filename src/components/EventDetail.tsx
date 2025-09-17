@@ -20,6 +20,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { Event, User, Comment } from '@/types';
+import { useNavigate } from 'react-router-dom';
 import { supabaseManager } from '@/lib/supabaseManager';
 
 interface EventDetailProps {
@@ -40,6 +41,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
   supabaseConnected
 }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
   const [isAttending, setIsAttending] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [attendeesCount, setAttendeesCount] = useState(0);
@@ -417,9 +419,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                         type="button"
                         className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
                         onClick={() => {
-                          const eventUrl = `${window.location.origin}/evento/${event.id}`;
-                          const shareText = `¡Mirá este evento! ${event.title} - ${eventUrl}`;
-                          window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+                          navigate(`/evento/${event.id}`);
                         }}
                       >
                         <Share2 className="w-4 h-4" />
