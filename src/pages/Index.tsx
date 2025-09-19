@@ -652,22 +652,36 @@ const Index: React.FC = () => {
       )}
       {/* Menú inferior solo si el usuario está logueado */}
       {currentUser && (
-        <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg flex justify-around items-center h-16 px-2 sm:px-8">
-          {/* Icono + para crear evento */}
-          <button
-            onClick={() => setShowCreateEventForm(true)}
-            className="flex flex-col items-center justify-center text-blue-600 hover:text-blue-800 focus:outline-none"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-            <span className="text-xs">Crear</span>
-          </button>
-          {/* Espacio para más iconos en el futuro */}
-          <div className="flex-1 flex justify-center gap-8">
-            {/* Ejemplo de icono futuro */}
-            {/* <button className="flex flex-col items-center text-gray-400"><svg ... /></button> */}
+        <footer
+          className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg flex items-center h-16 px-2 sm:px-8"
+          style={{
+            animation: 'slideUpMenu 0.4s cubic-bezier(0.4,0,0.2,1)'
+          }}
+        >
+          {/* Espacio para más iconos a la izquierda */}
+          <div className="flex-1 flex justify-end gap-8"></div>
+          {/* Icono + centralizado */}
+          <div className="flex flex-col items-center justify-center">
+            <button
+              onClick={() => setShowCreateEventForm(true)}
+              className="flex flex-col items-center justify-center text-blue-600 hover:text-blue-800 focus:outline-none"
+              style={{ margin: '0 32px' }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+              <span className="text-xs">Crear</span>
+            </button>
           </div>
+          {/* Espacio para más iconos a la derecha */}
+          <div className="flex-1 flex justify-start gap-8"></div>
         </footer>
       )}
+/* Animación slide up para el menú inferior */
+<style>
+@keyframes slideUpMenu {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
     </div>
   );
 }
