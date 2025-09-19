@@ -61,10 +61,7 @@ const Index: React.FC = () => {
 
   // Mostrar onboarding solo si el usuario no lo vio
   useEffect(() => {
-    const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
-    if (!onboardingSeen) {
-      setShowOnboarding(true);
-    }
+    setShowOnboarding(true);
   }, []);
 
   // Función para cerrar el onboarding
