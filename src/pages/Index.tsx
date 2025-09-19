@@ -30,22 +30,6 @@ import ModeratorEventManager from '@/components/ModeratorEventManager';
 import AuthModal from '@/components/AuthModal';
 
 const Index: React.FC = () => {
-  // Consultar puntos acumulados al abrir el perfil
-  useEffect(() => {
-    const fetchUserPoints = async () => {
-      if (currentUser && showUserProfile) {
-        const points = await supabaseManager.getUserPoints(currentUser.id);
-        setUserPoints(points);
-      }
-    };
-    fetchUserPoints();
-  }, [currentUser, showUserProfile]);
-
-  // Función para cerrar el onboarding
-  const handleCloseOnboarding = () => {
-    setShowOnboarding(false);
-    localStorage.setItem('enterate-onboarding-seen', 'true');
-  };
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userPoints, setUserPoints] = useState<number>(0);
   const [events, setEvents] = useState<Event[]>([]);
@@ -63,8 +47,6 @@ const Index: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
-  const [userPoints, setUserPoints] = useState<number>(0);
-  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Consultar puntos acumulados al abrir el perfil
   useEffect(() => {
@@ -79,6 +61,8 @@ const Index: React.FC = () => {
 
   // Mostrar onboarding solo si el usuario no lo vio
   useEffect(() => {
+    const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
+    if (!onboardingSeen) setShowOnboarding(true);
   }, []);
 
   // Función para cerrar el onboarding
@@ -636,18 +620,8 @@ const Index: React.FC = () => {
           }}
         />
       )}
-  // Consultar puntos acumulados al abrir el perfil
-  useEffect(() => {
-    const fetchUserPoints = async () => {
-      if (currentUser && showUserProfile) {
-        const points = await supabaseManager.getUserPoints(currentUser.id);
-        setUserPoints(points);
-      }
-    };
-    fetchUserPoints();
-  }, [currentUser, showUserProfile]);
     </div>
   );
-};
+}
 
 export default Index;
