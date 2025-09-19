@@ -27,6 +27,7 @@ export interface Event {
   comments?: Comment[];
   createdAt?: Date;
   updatedAt?: Date;
+  puntos?: number;
 }
 
 export interface Comment {
@@ -35,6 +36,7 @@ export interface Comment {
   userId: string;
   userName: string;
   userProfileImage?: string;
+  userAvatar?: string;
   content: string;
   createdAt: Date;
 }

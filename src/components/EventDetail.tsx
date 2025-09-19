@@ -11,7 +11,6 @@ import {
   Users,
   Heart,
   MessageCircle,
-  Share2,
   Send,
   X,
   DollarSign,
@@ -23,7 +22,6 @@ import { Event, User, Comment } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { Share2 } from 'lucide-react';
 import { supabaseManager } from '@/lib/supabaseManager';
-
 interface EventDetailProps {
   event: Event;
   isOpen: boolean;
@@ -317,10 +315,10 @@ const EventDetail: React.FC<EventDetailProps> = ({
           <div className="flex-1 overflow-y-auto">
             <div className="p-4 sm:p-6 space-y-6">
               {/* Event Image */}
-              {(event.imageUrl || event.image || event.image_url) && (
+              {(event.imageUrl || event.image) && (
                 <div className="w-full h-48 sm:h-64 md:h-80 rounded-lg overflow-hidden bg-gray-200">
                   <img
-                    src={event.imageUrl || event.image || event.image_url}
+                    src={event.imageUrl || event.image}
                     alt={event.title}
                     className="w-full h-full object-cover"
                   />
@@ -335,9 +333,18 @@ const EventDetail: React.FC<EventDetailProps> = ({
                     <Badge variant="secondary" className="mb-3">
                       {event.category}
                     </Badge>
-                    <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                    <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-2">
                       {event.description}
                     </p>
+                    {/* Puntos destacados en la descripción */}
+                    <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-yellow-50 rounded-full w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-yellow-500">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#FACC15" />
+                        <text x="12" y="16" textAnchor="middle" fontSize="12" fill="#B45309" fontWeight="bold">★</text>
+                      </svg>
+                      <span className="font-semibold text-yellow-700 text-sm">{event.puntos || 0} pts</span>
+                      <span className="text-xs text-yellow-800 ml-2">Puntos que obtendrás por asistir.</span>
+                    </div>
                   </div>
 
                   {/* Event Meta Info */}
@@ -378,7 +385,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                     <div className="flex items-center text-gray-600">
                       <UserIcon className="w-4 h-4 mr-3 flex-shrink-0" />
                       <span className="text-sm sm:text-base">
-                        Organizado por {event.organizerName || event.organizer_name}
+                        Organizado por {event.organizerName}
                       </span>
                     </div>
                   </div>
@@ -386,7 +393,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                   {/* Action Buttons */}
                   {currentUser && (
                     <div className="flex flex-col gap-3 pt-4">
-                      <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex flex-col sm:flex-row gap-3 items-center">
                         <Button
                           onClick={handleLike}
                           disabled={loading}
@@ -406,6 +413,14 @@ const EventDetail: React.FC<EventDetailProps> = ({
                           <Users className={`w-4 h-4 mr-2 ${isAttending ? 'text-white' : ''}`} />
                           {isAttending ? 'Asistiré' : 'Asistiré'} ({attendeesCount})
                         </Button>
+                          {/* Puntos del evento */}
+                          <div className="flex items-center gap-2 ml-2 px-3 py-2 bg-yellow-100 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-yellow-500">
+                              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#FACC15" />
+                              <text x="12" y="16" textAnchor="middle" fontSize="12" fill="#B45309" fontWeight="bold">★</text>
+                            </svg>
+                            <span className="font-semibold text-yellow-700 text-sm">{event.puntos || 0} pts</span>
+                          </div>
                       </div>
                       <Button
                         type="button"
