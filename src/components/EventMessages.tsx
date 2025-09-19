@@ -8,11 +8,11 @@ interface EventMessagesProps {
 const EventMessages: React.FC<EventMessagesProps> = ({ comments }) => {
   return (
     <div
-      className="space-y-4 pr-2 border rounded-md bg-white min-h-[120px] max-h-[50vh] overflow-y-auto"
+      className="space-y-4 pr-2 border rounded-md bg-white min-h-[120px] max-h-[70vh] overflow-y-auto"
       style={{
         WebkitOverflowScrolling: 'touch',
         height: '100%',
-        maxHeight: '50vh',
+        maxHeight: '70vh',
         overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
