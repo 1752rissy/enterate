@@ -59,10 +59,15 @@ const Index: React.FC = () => {
     fetchUserPoints();
   }, [currentUser, showUserProfile]);
 
-  // Mostrar onboarding solo si el usuario no lo vio
+  // Mostrar onboarding solo si el usuario es nuevo y no lo vio
   useEffect(() => {
-    setShowOnboarding(true);
-  }, []);
+    if (currentUser) {
+      const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
+      if (!onboardingSeen) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [currentUser]);
 
   // Función para cerrar el onboarding
   const handleCloseOnboarding = () => {
@@ -316,6 +321,11 @@ const Index: React.FC = () => {
     }
     
     setIsAuthModalOpen(false);
+    // Mostrar onboarding si es nuevo usuario
+    const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
+    if (!onboardingSeen) {
+      setShowOnboarding(true);
+    }
   };
 
   const handleLogout = () => {
