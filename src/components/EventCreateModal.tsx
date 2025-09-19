@@ -76,7 +76,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             if (supabaseConnected) {
               await supabaseManager.createEvent(newEvent);
               const updatedEvents = await supabaseManager.getEvents();
-              setEvents(updatedEvents.map(ev => ({ ...ev, puntos: ev.puntos ?? puntosValue })));
+              setEvents(updatedEvents);
             } else {
               setEvents((prev: any) => [...prev, { ...newEvent, puntos: puntosValue }]);
               const storedEvents = localStorage.getItem('enterate-events');
