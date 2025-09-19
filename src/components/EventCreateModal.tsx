@@ -7,13 +7,12 @@ interface EventCreateModalProps {
   currentUser: any;
   supabaseConnected: boolean;
   setShowCreateEventForm: (show: boolean) => void;
-  setEvents: (events: any) => void;
-  events: any[];
+  onCreateEvent: (event: any) => void;
 }
 
 const BUCKET_NAME = 'event-images';
 
-export default function EventCreateModal({ currentUser, supabaseConnected, setShowCreateEventForm, setEvents, events }: EventCreateModalProps) {
+export default function EventCreateModal({ currentUser, supabaseConnected, setShowCreateEventForm, onCreateEvent }: EventCreateModalProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -73,24 +72,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               createdBy: currentUser?.id || '',
               puntos: puntosValue,
             };
-            if (supabaseConnected) {
-              await supabaseManager.createEvent(newEvent);
-              const updatedEvents = await supabaseManager.getEvents();
-              setEvents(updatedEvents);
-            } else {
-              setEvents((prev: any) => [...prev, { ...newEvent, puntos: puntosValue }]);
-              const storedEvents = localStorage.getItem('enterate-events');
-              let eventsArr = [];
-              if (storedEvents) {
-                try {
-                  eventsArr = JSON.parse(storedEvents);
-                } catch {
-                  eventsArr = [];
-                }
-              }
-              eventsArr.push({ ...newEvent, puntos: puntosValue });
-              localStorage.setItem('enterate-events', JSON.stringify(eventsArr));
-            }
+            onCreateEvent(newEvent);
             setShowCreateEventForm(false);
           }}
         >

@@ -570,8 +570,7 @@ const Index: React.FC = () => {
                 currentUser={currentUser}
                 supabaseConnected={supabaseConnected}
                 setShowCreateEventForm={setShowCreateEventForm}
-                setEvents={setEvents}
-                events={events}
+                onCreateEvent={handleCreateEvent}
               />
             )}
           </TabsContent>
