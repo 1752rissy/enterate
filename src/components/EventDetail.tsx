@@ -308,19 +308,9 @@ const EventDetail: React.FC<EventDetailProps> = ({
         <div className="flex flex-col h-full">
           {/* Header with close button */}
           <DialogHeader className="p-4 sm:p-6 border-b flex-shrink-0">
-            <div className="flex items-start justify-between">
-              <DialogTitle className="text-xl sm:text-2xl font-bold pr-4 line-clamp-2">
-                {event.title}
-              </DialogTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onClose}
-                className="flex-shrink-0"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+            <DialogTitle className="text-xl sm:text-2xl font-bold pr-4 line-clamp-2">
+              {event.title}
+            </DialogTitle>
           </DialogHeader>
 
           {/* Scrollable content */}

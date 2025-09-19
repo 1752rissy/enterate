@@ -59,7 +59,7 @@ const EventDetailPage: React.FC = () => {
         <EventDetail
           event={event}
           isOpen={true}
-          onClose={() => navigate(-1)}
+          onClose={() => navigate('/')}
           currentUser={currentUser}
           onEventUpdate={() => {}}
           supabaseConnected={supabaseConnected}
