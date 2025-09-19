@@ -112,7 +112,22 @@ const Index: React.FC = () => {
     setShowCreateEventForm(false);
   };
 
-  const categories = ['Música', 'Gastronomía', 'Turismo', 'Cultura', 'Deportes', 'Arte'];
+  const categories = [
+    'Juntada para charlar',
+    'Salir a correr',
+    'Mateada en la plaza',
+    'Paseo con mascotas',
+    'Ir al cine',
+    'Paseo con perros',
+    'Descubrimiento local',
+    'Música',
+    'Gastronomía',
+    'Turismo',
+    'Cultura',
+    'Deportes',
+    'Arte',
+    'Otro'
+  ];
 
   useEffect(() => {
   // Mostrar onboarding solo si el usuario no lo vio

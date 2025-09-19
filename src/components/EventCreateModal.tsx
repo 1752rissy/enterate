@@ -20,13 +20,15 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
 
   // Upload a file to Supabase Storage and get public URL
   const categories = [
-    'Juntada para charlar',
-    'Salir a correr',
-    'Mateada en la plaza',
-    'Paseo con mascotas',
-    'Descubrimiento local',
-    'Música',
-    'Otro'
+  'Juntada para charlar',
+  'Salir a correr',
+  'Mateada en la plaza',
+  'Paseo con mascotas',
+  'Ir al cine',
+  'Paseo con perros',
+  'Descubrimiento local',
+  'Música',
+  'Otro'
   ];
   const handleFileUpload = async (file: File) => {
     setUploading(true);
@@ -58,6 +60,13 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             e.preventDefault();
             const form = e.target as any;
             const puntosValue = Number(form.puntos.value) || 0;
+            const eventDate = new Date(form.date.value);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            if (eventDate < today) {
+              alert('La fecha del evento no puede ser anterior a la actual.');
+              return;
+            }
             const newEvent = {
               title: form.title.value,
               description: form.description.value,
