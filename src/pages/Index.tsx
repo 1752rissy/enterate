@@ -62,7 +62,9 @@ const Index: React.FC = () => {
   // Mostrar onboarding solo si el usuario no lo vio
   useEffect(() => {
     const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
-    if (!onboardingSeen) setShowOnboarding(true);
+    if (!onboardingSeen) {
+      setShowOnboarding(true);
+    }
   }, []);
 
   // Función para cerrar el onboarding
@@ -299,15 +301,9 @@ const Index: React.FC = () => {
   if (loading) {
     return (
       <>
-        <div>
-          {showOnboarding && (
-            <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
-          )}
-          <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            {/* ...resto del contenido del componente... */}
-          </div>
-        </div>
+        {showOnboarding && (
+          <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
+        )}
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -320,6 +316,9 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showOnboarding && (
+        <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
+      )}
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
