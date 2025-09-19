@@ -58,6 +58,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.target as any;
+            const puntosValue = Number(form.puntos.value) || 0;
             const newEvent = {
               title: form.title.value,
               description: form.description.value,
@@ -70,14 +71,14 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               price: 0,
               organizerName: currentUser?.name || '',
               createdBy: currentUser?.id || '',
-              puntos: Number(form.puntos.value) || 0,
+              puntos: puntosValue,
             };
             if (supabaseConnected) {
               await supabaseManager.createEvent(newEvent);
               const updatedEvents = await supabaseManager.getEvents();
-              setEvents(updatedEvents);
+              setEvents(updatedEvents.map(ev => ({ ...ev, puntos: ev.puntos ?? puntosValue })));
             } else {
-              setEvents((prev: any) => [...prev, newEvent]);
+              setEvents((prev: any) => [...prev, { ...newEvent, puntos: puntosValue }]);
               const storedEvents = localStorage.getItem('enterate-events');
               let eventsArr = [];
               if (storedEvents) {
@@ -87,7 +88,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
                   eventsArr = [];
                 }
               }
-              eventsArr.push(newEvent);
+              eventsArr.push({ ...newEvent, puntos: puntosValue });
               localStorage.setItem('enterate-events', JSON.stringify(eventsArr));
             }
             setShowCreateEventForm(false);
