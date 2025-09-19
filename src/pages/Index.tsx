@@ -30,6 +30,22 @@ import ModeratorEventManager from '@/components/ModeratorEventManager';
 import AuthModal from '@/components/AuthModal';
 
 const Index: React.FC = () => {
+  // Consultar puntos acumulados al abrir el perfil
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      if (currentUser && showUserProfile) {
+        const points = await supabaseManager.getUserPoints(currentUser.id);
+        setUserPoints(points);
+      }
+    };
+    fetchUserPoints();
+  }, [currentUser, showUserProfile]);
+
+  // Función para cerrar el onboarding
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('enterate-onboarding-seen', 'true');
+  };
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userPoints, setUserPoints] = useState<number>(0);
   const [events, setEvents] = useState<Event[]>([]);
@@ -47,6 +63,29 @@ const Index: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [userPoints, setUserPoints] = useState<number>(0);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Consultar puntos acumulados al abrir el perfil
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      if (currentUser && showUserProfile) {
+        const points = await supabaseManager.getUserPoints(currentUser.id);
+        setUserPoints(points);
+      }
+    };
+    fetchUserPoints();
+  }, [currentUser, showUserProfile]);
+
+  // Mostrar onboarding solo si el usuario no lo vio
+  useEffect(() => {
+  }, []);
+
+  // Función para cerrar el onboarding
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('enterate-onboarding-seen', 'true');
+  };
   // Crear evento
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => {
     const newEvent: Event = {
@@ -275,21 +314,23 @@ const Index: React.FC = () => {
 
   if (loading) {
     return (
-    <div>
-      {showOnboarding && (
-        <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
-      )}
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        {/* ...resto del contenido del componente... */}
-      </div>
-    </div>
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando Entérate...</p>
+      <>
+        <div>
+          {showOnboarding && (
+            <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
+          )}
+          <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            {/* ...resto del contenido del componente... */}
+          </div>
         </div>
-      </div>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Cargando Entérate...</p>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -579,6 +620,7 @@ const Index: React.FC = () => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onLogin={handleLogin}
+        supabaseConnected={supabaseConnected}
       />
 
       {/* User Profile Modal */}
