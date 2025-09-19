@@ -532,17 +532,7 @@ const Index: React.FC = () => {
           </TabsList>
 
           <TabsContent value="events" className="space-y-4 sm:space-y-6">
-            {/* Botón agregar evento para usuarios registrados */}
-            {currentUser && (
-              <div className="mb-4 flex justify-end">
-                <Button
-                  onClick={() => setShowCreateEventForm(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Agregar evento
-                </Button>
-              </div>
-            )}
+            {/* El botón de agregar evento se movió al menú inferior */}
             {/* Search and Filters */}
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -660,6 +650,22 @@ const Index: React.FC = () => {
           }}
         />
       )}
+      {/* Menú inferior estilo Instagram */}
+      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg flex justify-around items-center h-16 px-2 sm:px-8">
+        {/* Icono + para crear evento */}
+        <button
+          onClick={() => setShowCreateEventForm(true)}
+          className="flex flex-col items-center justify-center text-blue-600 hover:text-blue-800 focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          <span className="text-xs">Crear</span>
+        </button>
+        {/* Espacio para más iconos en el futuro */}
+        <div className="flex-1 flex justify-center gap-8">
+          {/* Ejemplo de icono futuro */}
+          {/* <button className="flex flex-col items-center text-gray-400"><svg ... /></button> */}
+        </div>
+      </footer>
     </div>
   );
 }
