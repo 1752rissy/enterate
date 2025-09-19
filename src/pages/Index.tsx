@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import OnboardingModal from '@/components/OnboardingModal';
 import UserProfileModal from '@/components/UserProfileModal';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ImageUpload from '@/components/ImageUpload';
@@ -80,8 +81,6 @@ const Index: React.FC = () => {
     setShowOnboarding(false);
     localStorage.setItem('enterate-onboarding-seen', 'true');
   };
-  // Onboarding Modal
-  import OnboardingModal from '@/components/OnboardingModal';
     initializeApp();
   }, []);
 
@@ -276,9 +275,15 @@ const Index: React.FC = () => {
 
   if (loading) {
     return (
-    {showOnboarding && (
-      <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
-    )}
+    <div>
+      {showOnboarding && (
+        <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
+      )}
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        {/* ...resto del contenido del componente... */}
+      </div>
+    </div>
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
