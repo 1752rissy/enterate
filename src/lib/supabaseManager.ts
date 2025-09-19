@@ -150,18 +150,18 @@ class SupabaseManager {
       const eventToInsert = {
         title: eventData.title,
         description: eventData.description,
-        date: eventData.date,
-        time: eventData.time,
+        date: eventData.date, // Debe ser string formato YYYY-MM-DD
+        time: eventData.time, // Debe ser string formato HH:MM:SS
+        end_time: eventData.end_time || null, // Si existe
         location: eventData.location,
         category: eventData.category,
         image_url: eventData.imageUrl || eventData.image || null,
         price: eventData.price || 0,
         organizer_name: eventData.organizerName,
-        created_by: eventData.createdBy,
+        created_by: eventData.createdBy, // Debe ser UUID
         likes: 0,
         liked_by: [],
         attendees: [],
-        puntos: eventData.puntos || 0
       };
 
       console.log('📝 Event data to insert:', eventToInsert);

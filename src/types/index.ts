@@ -14,6 +14,7 @@ export interface Event {
   description: string;
   date: string;
   time: string;
+  end_time?: string;
   location: string;
   category: string;
   imageUrl?: string;
@@ -28,17 +29,13 @@ export interface Event {
   createdAt?: Date;
   updatedAt?: Date;
   puntos?: number;
-}
-
-export interface Comment {
-  id: string;
-  eventId: string;
-  userId: string;
-  userName: string;
+  eventId?: string;
+  userId?: string;
+  userName?: string;
   userProfileImage?: string;
   userAvatar?: string;
-  content: string;
-  createdAt: Date;
+  content?: string;
+  createdAt?: Date;
 }
 
 export interface EventInteraction {
