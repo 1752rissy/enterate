@@ -120,6 +120,7 @@ class SupabaseManager {
         likes: event.likes || 0,
         likedBy: event.liked_by || [],
         attendees: event.attendees || [],
+        puntos: event.puntos || 0,
         comments: event.app_f6a677c6d3_comments?.map((comment: any) => ({
           id: comment.id,
           eventId: comment.event_id,
