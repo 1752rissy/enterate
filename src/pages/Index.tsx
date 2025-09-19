@@ -84,6 +84,7 @@ const Index: React.FC = () => {
       comments: [],
       attendees: [],
       createdAt: new Date(),
+      puntos: eventData.puntos || 0,
     };
     if (supabaseConnected) {
       await supabaseManager.createEvent(newEvent);

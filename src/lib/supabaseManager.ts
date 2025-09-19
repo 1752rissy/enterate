@@ -159,7 +159,8 @@ class SupabaseManager {
         created_by: eventData.createdBy,
         likes: 0,
         liked_by: [],
-        attendees: []
+        attendees: [],
+        puntos: eventData.puntos || 0
       };
 
       console.log('📝 Event data to insert:', eventToInsert);
