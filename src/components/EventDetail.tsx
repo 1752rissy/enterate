@@ -299,6 +299,14 @@ const EventDetail: React.FC<EventDetailProps> = ({
   };
 
   const formatTime = (timeStr: string) => {
+    if (!timeStr) return '';
+    // Si ya está en formato HH:mm, retorna directo
+    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
+    // Si viene como string de fecha, extrae la hora
+    const date = new Date(`1970-01-01T${timeStr}`);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
     return timeStr;
   };
 
