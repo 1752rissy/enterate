@@ -455,23 +455,15 @@ const EventDetail: React.FC<EventDetailProps> = ({
                 {/* Sección de comentarios movida a un modal aparte */}
                 {showComments && (
                   <Dialog open={showComments} onOpenChange={setShowComments}>
-                    <DialogContent className="w-full max-w-md sm:max-w-lg p-0 sm:p-4 rounded-t-2xl sm:rounded-2xl fixed bottom-0 sm:static left-0 sm:left-auto right-0 sm:right-auto top-0 sm:top-auto h-[90vh] sm:h-auto flex flex-col">
-                      <div className="flex items-center justify-between px-4 py-3 border-b bg-white rounded-t-2xl">
-                        <div className="flex items-center">
-                          <MessageCircle className="w-5 h-5 mr-2" />
-                          <h3 className="text-lg font-semibold flex items-center gap-2">
-                            Comentarios ({comments.length})
-                          </h3>
-                        </div>
-                        <Button variant="ghost" size="icon" onClick={() => setShowComments(false)}>
-                          <span className="sr-only">Cerrar</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                        </Button>
+                    <DialogContent className="max-w-lg w-full p-4">
+                      <div className="flex items-center mb-4">
+                        <MessageCircle className="w-5 h-5 mr-2" />
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          Comentarios ({comments.length})
+                        </h3>
                       </div>
-                      <div className="flex-1 overflow-y-auto px-4 py-2 bg-white">
-                        <EventMessages comments={comments} />
-                      </div>
-                      <div className="px-4 py-3 bg-white border-t">
+                      <EventMessages comments={comments} />
+                      <div className="mt-4">
                         {currentUser ? (
                           <div className="space-y-3">
                             <Textarea
