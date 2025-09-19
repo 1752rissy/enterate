@@ -90,8 +90,11 @@ const Index: React.FC = () => {
       const updatedEvents = await supabaseManager.getEvents();
       setEvents(updatedEvents);
     } else {
-      setEvents(prev => [...prev, newEvent]);
-      localStorage.setItem('enterate-events', JSON.stringify([...events, newEvent]));
+      setEvents(prev => {
+        const updated = [...prev, newEvent];
+        localStorage.setItem('enterate-events', JSON.stringify(updated));
+        return updated;
+      });
     }
     setShowCreateEventForm(false);
   };
