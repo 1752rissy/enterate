@@ -675,7 +675,6 @@ const Index: React.FC = () => {
           <div className="flex-1 flex justify-start gap-8"></div>
         </footer>
       )}
-/* Animación slide up para el menú inferior */
     </div>
   );
 }
