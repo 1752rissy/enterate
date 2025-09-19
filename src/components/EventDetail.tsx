@@ -503,7 +503,17 @@ const EventDetail: React.FC<EventDetailProps> = ({
                   {/* Comments List - Scrollable within the main scroll area */}
                   <div
                     className="space-y-4 overflow-y-auto pr-2 border rounded-md bg-white min-h-[120px] max-h-[60vh]"
-                    style={{ WebkitOverflowScrolling: 'touch', height: '100%', maxHeight: '60vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}
+                    style={{
+                      WebkitOverflowScrolling: 'touch',
+                      height: '100%',
+                      maxHeight: '60vh',
+                      overflowY: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      touchAction: 'pan-y',
+                      overscrollBehavior: 'contain',
+                      scrollBehavior: 'smooth',
+                    }}
                   >
                     {comments.length === 0 ? (
                       <p className="text-gray-500 text-center py-8 text-sm">
