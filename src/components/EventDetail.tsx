@@ -358,7 +358,14 @@ const EventDetail: React.FC<EventDetailProps> = ({
 
                     <div className="flex items-center text-gray-600">
                       <Clock className="w-4 h-4 mr-3 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">{formatTime(event.time)}</span>
+                      <span className="text-sm sm:text-base">
+                        {formatTime(event.time)}
+                        {event.end_time && (
+                          <>
+                            {' '}<span className="mx-1">-</span>{formatTime(event.end_time)}
+                          </>
+                        )}
+                      </span>
                     </div>
 
                     <div className="flex items-start text-gray-600">
