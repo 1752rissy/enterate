@@ -74,9 +74,8 @@ const Index: React.FC = () => {
   };
   // Crear evento
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'organizerId' | 'organizerName' | 'likes' | 'likedBy' | 'comments' | 'photos' | 'createdAt'>) => {
-    const newEvent: Event = {
+    const newEvent: Omit<Event, 'id'> = {
       ...eventData,
-      id: Date.now().toString(),
       organizerName: currentUser?.name || 'Anónimo',
       createdBy: currentUser?.id || '',
       likes: 0,
@@ -92,7 +91,12 @@ const Index: React.FC = () => {
       setEvents(updatedEvents);
     } else {
       setEvents(prev => {
-        const updated = [...prev, newEvent];
+        // Para localStorage sí se necesita el id
+        const localEvent: Event = {
+          ...newEvent,
+          id: Date.now().toString(),
+        };
+        const updated = [...prev, localEvent];
         localStorage.setItem('enterate-events', JSON.stringify(updated));
         return updated;
       });
