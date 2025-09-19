@@ -7,6 +7,7 @@ interface UserProfileModalProps {
     nombre_completo: string;
     email: string;
     foto_perfil?: string;
+    puntos?: number;
   };
 }
 
@@ -41,6 +42,15 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onClose, us
               value={user.email}
               readOnly
               className="w-full border rounded px-3 py-2 bg-gray-100"
+            />
+          </div>
+          <div className="w-full">
+            <label className="block text-sm font-medium mb-1">Puntos acumulados</label>
+            <input
+              type="number"
+              value={user.puntos ?? 0}
+              readOnly
+              className="w-full border rounded px-3 py-2 bg-gray-100 font-bold text-blue-700"
             />
           </div>
         </div>

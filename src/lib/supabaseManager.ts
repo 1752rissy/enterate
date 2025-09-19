@@ -2,6 +2,28 @@ import { supabase } from './supabase';
 import { Event, User, Comment } from '@/types';
 
 class SupabaseManager {
+  // Obtener puntos acumulados de un usuario
+  async getUserPoints(userId: string): Promise<number> {
+    if (!this.isConnected) {
+      console.log('⚠️ Supabase not connected, cannot get user points');
+      return 0;
+    }
+    try {
+      const { data, error } = await supabase
+        .from('app_f6e677dc63_puntos_evento')
+        .select('puntos_obtenidos')
+        .eq('usuario_id', userId);
+      if (error) {
+        console.error('❌ Error fetching user points:', error);
+        return 0;
+      }
+      // Sumar todos los puntos obtenidos
+      return (data || []).reduce((acc, row) => acc + (row.puntos_obtenidos || 0), 0);
+    } catch (error) {
+      console.error('❌ Error getting user points:', error);
+      return 0;
+    }
+  }
   // Auth: Login con email y password usando Supabase Auth
   async signIn(email: string, password: string): Promise<User | null> {
     try {

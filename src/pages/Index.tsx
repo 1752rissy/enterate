@@ -29,6 +29,8 @@ import ModeratorEventManager from '@/components/ModeratorEventManager';
 import AuthModal from '@/components/AuthModal';
 
 const Index: React.FC = () => {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [userPoints, setUserPoints] = useState<number>(0);
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -71,6 +73,15 @@ const Index: React.FC = () => {
   const categories = ['Música', 'Gastronomía', 'Turismo', 'Cultura', 'Deportes', 'Arte'];
 
   useEffect(() => {
+  // Mostrar onboarding solo si el usuario no lo vio
+  const onboardingSeen = localStorage.getItem('enterate-onboarding-seen');
+  if (!onboardingSeen) setShowOnboarding(true);
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('enterate-onboarding-seen', 'true');
+  };
+  // Onboarding Modal
+  import OnboardingModal from '@/components/OnboardingModal';
     initializeApp();
   }, []);
 
@@ -265,6 +276,9 @@ const Index: React.FC = () => {
 
   if (loading) {
     return (
+    {showOnboarding && (
+      <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
+    )}
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -282,9 +296,14 @@ const Index: React.FC = () => {
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Left side - Logo and status */}
             <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 truncate">
-                🎉 Entérate
-              </h1>
+              <div className="flex flex-col">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 truncate">
+                  🎉 Entérate
+                </h1>
+                <span className="text-xs sm:text-sm text-gray-600 font-medium mt-1">
+                  la primera aplicación de eventos sociales, donde todo lo generas vos!!!
+                </span>
+              </div>
               
               {/* Connection Status - Hidden on very small screens */}
               <Badge 
@@ -565,10 +584,21 @@ const Index: React.FC = () => {
           user={{
             nombre_completo: currentUser.name,
             email: currentUser.email,
-            foto_perfil: currentUser.profileImage || currentUser.avatar || ''
+            foto_perfil: currentUser.profileImage || currentUser.avatar || '',
+            puntos: userPoints
           }}
         />
       )}
+  // Consultar puntos acumulados al abrir el perfil
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      if (currentUser && showUserProfile) {
+        const points = await supabaseManager.getUserPoints(currentUser.id);
+        setUserPoints(points);
+      }
+    };
+    fetchUserPoints();
+  }, [currentUser, showUserProfile]);
     </div>
   );
 };

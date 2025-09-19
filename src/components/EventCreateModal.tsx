@@ -70,6 +70,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
               price: 0,
               organizerName: currentUser?.name || '',
               createdBy: currentUser?.id || '',
+              puntos: Number(form.puntos.value) || 0,
             };
             if (supabaseConnected) {
               await supabaseManager.createEvent(newEvent);
@@ -133,6 +134,10 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
           <div className="mb-3">
             <label className="block text-sm font-medium mb-1">Cupo máximo (opcional)</label>
             <input name="max_capacity" type="number" min="1" className="w-full border rounded px-3 py-2" placeholder="Ej: 100" />
+          </div>
+          <div className="mb-3">
+            <label className="block text-sm font-medium mb-1">Puntos por asistir</label>
+            <input name="puntos" type="number" min="0" required className="w-full border rounded px-3 py-2" placeholder="Ej: 10" />
           </div>
           <div className="mb-3">
             <ImageUpload
