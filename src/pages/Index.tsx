@@ -85,7 +85,13 @@ const Index: React.FC = () => {
     if (supabaseConnected) {
       const createdEvent = await supabaseManager.createEvent(newEvent);
       if (createdEvent) {
-        setEvents(prev => [createdEvent, ...prev]);
+        // Forzar lectura del evento recién creado desde la base para asegurar que el campo puntos se refleja
+        const eventFromDb = await supabaseManager.getEvents();
+        if (eventFromDb && eventFromDb.length > 0) {
+          setEvents([eventFromDb[0], ...events]);
+        } else {
+          setEvents(prev => [createdEvent, ...prev]);
+        }
       } else {
         // fallback: recargar todos los eventos
         const updatedEvents = await supabaseManager.getEvents();
