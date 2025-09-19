@@ -172,7 +172,6 @@ const AuthModal: React.FC<AuthModalProps> = ({
             Entérate
           </DialogTitle>
           <div className="text-center text-xs text-gray-500 mt-1 mb-2">
-            desarrollado por Andres Gutierrez
           </div>
         </DialogHeader>
 
