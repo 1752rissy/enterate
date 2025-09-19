@@ -676,12 +676,6 @@ const Index: React.FC = () => {
         </footer>
       )}
 /* Animación slide up para el menú inferior */
-<style>
-@keyframes slideUpMenu {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-</style>
     </div>
   );
 }
