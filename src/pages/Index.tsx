@@ -29,6 +29,7 @@ import EventDetail from '@/components/EventDetail';
 import ModeratorEventManager from '@/components/ModeratorEventManager';
 import AuthModal from '@/components/AuthModal';
 
+
 const Index: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userPoints, setUserPoints] = useState<number>(0);
