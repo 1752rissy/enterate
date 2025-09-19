@@ -53,7 +53,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-8 mx-2 max-h-screen overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl p-8 mx-2 max-h-[calc(100vh-80px)] overflow-y-auto mb-20">
         <h2 className="text-2xl font-bold mb-4 text-center">Crear Evento</h2>
         <form
           onSubmit={async (e) => {
@@ -158,7 +158,7 @@ export default function EventCreateModal({ currentUser, supabaseConnected, setSh
             {uploading && <div className="text-sm text-blue-600 mt-2">Subiendo imagen...</div>}
             {error && <div className="text-sm text-red-600 mt-2">{error}</div>}
           </div>
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-4 pb-2">
             <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 font-semibold">Crear Evento</button>
             <button type="button" className="flex-1 border rounded px-4 py-2" onClick={() => setShowCreateEventForm(false)}>Cancelar</button>
           </div>
