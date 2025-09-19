@@ -83,9 +83,14 @@ const Index: React.FC = () => {
       puntos: eventData.puntos || 0,
     };
     if (supabaseConnected) {
-      await supabaseManager.createEvent(newEvent);
-      const updatedEvents = await supabaseManager.getEvents();
-      setEvents(updatedEvents);
+      const createdEvent = await supabaseManager.createEvent(newEvent);
+      if (createdEvent) {
+        setEvents(prev => [createdEvent, ...prev]);
+      } else {
+        // fallback: recargar todos los eventos
+        const updatedEvents = await supabaseManager.getEvents();
+        setEvents(updatedEvents);
+      }
     } else {
       setEvents(prev => {
         // Para localStorage sí se necesita el id
