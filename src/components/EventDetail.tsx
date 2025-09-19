@@ -422,17 +422,9 @@ const EventDetail: React.FC<EventDetailProps> = ({
                             className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded px-4 py-2"
                             onClick={() => setShowComments(true)}
                           >
-                            <MessageCircle className="w-4 h-4" />
-                            Mensajes
+                            <MessageCircle className="w-5 h-5" />
+                            <span className="ml-1 text-sm font-semibold text-gray-700">{comments.length}</span>
                           </Button>
-                          {/* Logo y puntos al lado de comentarios */}
-                          <div className="flex items-center gap-2 ml-2 px-3 py-2 bg-yellow-100 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-yellow-500">
-                              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#FACC15" />
-                              <text x="12" y="16" textAnchor="middle" fontSize="12" fill="#B45309" fontWeight="bold">★</text>
-                            </svg>
-                            <span className="font-semibold text-yellow-700 text-sm">{event.puntos || 0} pts</span>
-                          </div>
                         </div>
                       </div>
                       <Button
@@ -460,50 +452,50 @@ const EventDetail: React.FC<EventDetailProps> = ({
                   )}
                 </div>
 
-                {/* Right Column - Comments Section */}
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      Comentarios ({comments.length})
-                    </h3>
-                  </div>
-
-                  {/* Add Comment */}
-                  {currentUser && (
-                    <div className="space-y-3">
-                      <Textarea
-                        placeholder="Escribe un comentario..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        className="resize-none"
-                        rows={3}
-                      />
-                      <Button
-                        onClick={handleAddComment}
-                        disabled={commentLoading || !newComment.trim()}
-                        size="sm"
-                        className="w-full sm:w-auto px-6 py-2 text-base sm:text-sm"
-                        style={{ minWidth: 120 }}
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        {commentLoading ? 'Enviando...' : 'Enviar comentario'}
-                      </Button>
-                    </div>
-                  )}
-
-                  {!currentUser && (
-                    <Alert className="border-orange-200 bg-orange-50">
-                      <AlertCircle className="h-4 w-4 text-orange-600" />
-                      <AlertDescription className="text-orange-800">
-                        Inicia sesión para comentar
-                      </AlertDescription>
-                    </Alert>
-                  )}
-
-                  {/* Comments List - Scrollable within the main scroll area */}
-                  <EventMessages comments={comments} />
-                </div>
+                {/* Sección de comentarios movida a un modal aparte */}
+                {showComments && (
+                  <Dialog open={showComments} onOpenChange={setShowComments}>
+                    <DialogContent className="max-w-lg w-full p-4">
+                      <div className="flex items-center mb-4">
+                        <MessageCircle className="w-5 h-5 mr-2" />
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          Comentarios ({comments.length})
+                        </h3>
+                      </div>
+                      <EventMessages comments={comments} />
+                      <div className="mt-4">
+                        {currentUser ? (
+                          <div className="space-y-3">
+                            <Textarea
+                              placeholder="Escribe un comentario..."
+                              value={newComment}
+                              onChange={(e) => setNewComment(e.target.value)}
+                              className="resize-none"
+                              rows={3}
+                            />
+                            <Button
+                              onClick={handleAddComment}
+                              disabled={commentLoading || !newComment.trim()}
+                              size="sm"
+                              className="w-full sm:w-auto px-6 py-2 text-base sm:text-sm"
+                              style={{ minWidth: 120 }}
+                            >
+                              <Send className="w-4 h-4 mr-2" />
+                              {commentLoading ? 'Enviando...' : 'Enviar comentario'}
+                            </Button>
+                          </div>
+                        ) : (
+                          <Alert className="border-orange-200 bg-orange-50">
+                            <AlertCircle className="h-4 w-4 text-orange-600" />
+                            <AlertDescription className="text-orange-800">
+                              Inicia sesión para comentar
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </div>
           </div>
