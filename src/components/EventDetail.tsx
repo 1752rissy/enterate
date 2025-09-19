@@ -327,7 +327,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
               )}
 
               {/* Event Info Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 overflow-y-auto max-h-[80vh]" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {/* Left Column - Event Details */}
                 <div className="space-y-4">
                   <div>
