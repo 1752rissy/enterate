@@ -26,6 +26,7 @@ export const GoogleAuthButton: React.FC<{ disabled?: boolean }> = ({ disabled = 
     }
   };
 
+  
   return (
     <Button
       type="button"
