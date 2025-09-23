@@ -1,3 +1,13 @@
+export interface Comment {
+  id: string;
+  eventId: string;
+  userId: string;
+  userName: string;
+  userProfileImage?: string;
+  userAvatar?: string;
+  content: string;
+  createdAt: Date;
+}
 export interface User {
   id: string;
   name: string;
@@ -6,6 +16,11 @@ export interface User {
   avatar?: string;
   role?: 'user' | 'moderator' | 'admin';
   createdAt?: Date;
+  user_metadata?: {
+    name?: string;
+    avatar_url?: string;
+    [key: string]: any;
+  };
 }
 
 export interface Event {
@@ -35,7 +50,6 @@ export interface Event {
   userProfileImage?: string;
   userAvatar?: string;
   content?: string;
-  createdAt?: Date;
 }
 
 export interface EventInteraction {

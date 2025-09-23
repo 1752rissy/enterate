@@ -238,9 +238,9 @@ const EventDetail: React.FC<EventDetailProps> = ({
       const comment: Omit<Comment, 'id'> = {
         eventId: event.id,
         userId: currentUser.id,
-        userName: currentUser.name,
-        userAvatar: currentUser.profileImage || currentUser.avatar,
-        userProfileImage: currentUser.profileImage || currentUser.avatar,
+        userName: currentUser.name || currentUser.user_metadata?.name || '',
+        userAvatar: currentUser.profileImage || currentUser.avatar || currentUser.user_metadata?.avatar_url || '',
+        userProfileImage: currentUser.profileImage || currentUser.avatar || currentUser.user_metadata?.avatar_url || '',
         content: newComment.trim(),
         createdAt: new Date()
       };
