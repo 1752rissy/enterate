@@ -653,12 +653,7 @@ const Index: React.FC = () => {
         <UserProfileModal
           isOpen={showUserProfile}
           onClose={() => setShowUserProfile(false)}
-          user={{
-            nombre_completo: currentUser.name,
-            email: currentUser.email,
-            foto_perfil: currentUser.profileImage || currentUser.avatar || '',
-            puntos: userPoints
-          }}
+          user={{ ...currentUser, puntos: userPoints }}
         />
       )}
       {/* Menú inferior solo si el usuario está logueado */}
