@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 
 const REDIRECT_URL = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
 
+
 export const GoogleAuthButton: React.FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   const [loading, setLoading] = useState(false);
 
