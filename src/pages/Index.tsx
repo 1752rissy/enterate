@@ -24,6 +24,7 @@ import {
 import { Event, User } from '@/types';
 import { supabaseManager } from '@/lib/supabaseManager';
 import { mockEvents } from '@/lib/mockData';
+import { supabase } from '@/lib/supabase';
 import EventList from '@/components/EventList';
 import EventDetail from '@/components/EventDetail';
 import ModeratorEventManager from '@/components/ModeratorEventManager';
@@ -36,7 +37,7 @@ const Index: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [activeTab, setActiveTab] = useState('events');
@@ -49,11 +50,21 @@ const Index: React.FC = () => {
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
 
+
+  // Escuchar el estado de sesión de Supabase
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setCurrentUser(data?.user));
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentUser(session?.user ?? null);
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
+
   // Consultar puntos acumulados al abrir el perfil
   useEffect(() => {
     const fetchUserPoints = async () => {
       if (currentUser && showUserProfile) {
-        const points = await supabaseManager.getUserPoints(currentUser.id);
+        const points = await supabaseManager.getUserPoints(currentUser.id || currentUser.email);
         setUserPoints(points);
       }
     };
