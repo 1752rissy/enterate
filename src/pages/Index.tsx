@@ -425,20 +425,18 @@ const Index: React.FC = () => {
                   <div className="hidden sm:flex items-center space-x-3">
                     <div className="flex items-center space-x-2">
                       <img
-                        src={currentUser.profileImage || currentUser.avatar}
-                        alt={currentUser.name}
+                        src={currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || currentUser.profileImage || currentUser.avatar}
+                        alt={currentUser.user_metadata?.name || currentUser.email || currentUser.name}
                         className="w-8 h-8 rounded-full cursor-pointer"
                         onClick={() => setShowUserProfile(true)}
                       />
                       <div className="text-sm hidden lg:block">
                         <p className="font-medium text-gray-900 truncate max-w-32">
-                          {currentUser.name}
+                          {currentUser.user_metadata?.name || currentUser.email || currentUser.name}
                         </p>
                         <div className="flex items-center space-x-1">
-                          {(currentUser.role === 'moderator' || currentUser.role === 'admin') && (
-                            <Shield className="w-3 h-3 text-green-600" />
-                          )}
-                          <p className="text-gray-500 capitalize text-xs">{currentUser.role}</p>
+                          {/* Puedes agregar roles personalizados si los gestionas en Supabase */}
+                          <p className="text-gray-500 capitalize text-xs">Usuario</p>
                         </div>
                       </div>
                     </div>
