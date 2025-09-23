@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 
-const REDIRECT_URL = import.meta.env.VITE_GOOGLE_REDIRECT_URL ;//|| 'http://localhost:5173';
+const REDIRECT_URL = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
 
 export const GoogleAuthButton: React.FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   const [loading, setLoading] = useState(false);
