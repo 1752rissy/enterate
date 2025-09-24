@@ -1,3 +1,4 @@
+import QRCode from 'react-qr-code';
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,11 @@ const EventDetail: React.FC<EventDetailProps> = ({
   onEventUpdate,
   supabaseConnected
 }) => {
+  // Estados para QR y edición
+  const [showQR, setShowQR] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editEventData, setEditEventData] = useState<Event | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
@@ -440,9 +446,167 @@ const EventDetail: React.FC<EventDetailProps> = ({
                             <MessageCircle className="w-5 h-5" />
                             <span className="ml-1 text-sm font-semibold text-gray-700">{comments.length}</span>
                           </Button>
+                        {/* Botones de editar/eliminar solo para el creador */}
+                        {event.createdBy === currentUser.id && (
+                          <>
+                            <Button
+                              type="button"
+                              className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded px-3 py-2"
+                              onClick={() => { setEditEventData(event); setIsEditModalOpen(true); }}
+                              disabled={editLoading}
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              type="button"
+                              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2"
+                              onClick={async () => {
+                                if (window.confirm('¿Seguro que deseas eliminar este evento? Esta acción no se puede deshacer.')) {
+                                  setEditLoading(true);
+                                  try {
+                                    if (supabaseConnected) {
+                                      await supabaseManager.deleteEvent(event.id);
+                                    } else {
+                                      // Local
+                                      const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
+                                      const filtered = events.filter((e: Event) => e.id !== event.id);
+                                      localStorage.setItem('enterate-events', JSON.stringify(filtered));
+                                    }
+                                    onEventUpdate();
+                                    onClose();
+                                  } catch (err) {
+                                    alert('Error al eliminar el evento.');
+                                  } finally {
+                                    setEditLoading(false);
+                                  }
+                                }
+                              }}
+                              disabled={editLoading}
+                            >
+                              Eliminar
+                            </Button>
+                            <Button
+                              type="button"
+                              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2"
+                              onClick={() => setShowQR(true)}
+                            >
+                              Generar QR
+                            </Button>
+                          </>
+                        )}
+      {/* Modal para mostrar QR */}
+      {showQR && (
+        <Dialog open={showQR} onOpenChange={setShowQR}>
+          <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
+            <DialogHeader>
+              <DialogTitle>QR para asistencia</DialogTitle>
+            </DialogHeader>
+            <div className="my-4 flex flex-col items-center">
+              <QRCode value={JSON.stringify({ eventId: event.id })} size={200} />
+              <p className="mt-4 text-center text-gray-700 text-sm">Escanea este código para registrar asistencia y sumar puntos.</p>
+            </div>
+            <Button onClick={() => setShowQR(false)} className="mt-2">Cerrar</Button>
+          </DialogContent>
+        </Dialog>
+      )}
                         </div>
                       </div>
                       <Button
+      {/* Modal de edición de evento */}
+      {isEditModalOpen && editEventData && (
+        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+          <DialogContent className="max-w-lg w-full p-4">
+            <DialogHeader>
+              <DialogTitle>Editar Evento</DialogTitle>
+            </DialogHeader>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setEditLoading(true);
+                try {
+                  const updated: Event = { ...editEventData };
+                  if (supabaseConnected) {
+                    await supabaseManager.updateEvent(updated);
+                  } else {
+                    // Local
+                    const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
+                    const idx = events.findIndex((ev: Event) => ev.id === updated.id);
+                    if (idx > -1) { events[idx] = updated; }
+                    localStorage.setItem('enterate-events', JSON.stringify(events));
+                  }
+                  onEventUpdate();
+                  setIsEditModalOpen(false);
+                } catch (err) {
+                  alert('Error al actualizar el evento.');
+                } finally {
+                  setEditLoading(false);
+                }
+              }}
+              className="space-y-4"
+            >
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.title}
+                onChange={e => setEditEventData({ ...editEventData, title: e.target.value })}
+                placeholder="Título"
+                required
+              />
+              <textarea
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.description}
+                onChange={e => setEditEventData({ ...editEventData, description: e.target.value })}
+                placeholder="Descripción"
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.date}
+                onChange={e => setEditEventData({ ...editEventData, date: e.target.value })}
+                placeholder="Fecha"
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.time}
+                onChange={e => setEditEventData({ ...editEventData, time: e.target.value })}
+                placeholder="Hora"
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.location}
+                onChange={e => setEditEventData({ ...editEventData, location: e.target.value })}
+                placeholder="Ubicación"
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.category}
+                onChange={e => setEditEventData({ ...editEventData, category: e.target.value })}
+                placeholder="Categoría"
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.imageUrl || ''}
+                onChange={e => setEditEventData({ ...editEventData, imageUrl: e.target.value })}
+                placeholder="URL de imagen"
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={editEventData.price || ''}
+                onChange={e => setEditEventData({ ...editEventData, price: Number(e.target.value) })}
+                placeholder="Precio"
+                type="number"
+                min="0"
+              />
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={editLoading}>
+                {editLoading ? 'Guardando...' : 'Guardar cambios'}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
                         type="button"
                         className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
                         onClick={() => {

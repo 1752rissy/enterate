@@ -1,3 +1,4 @@
+import QrReader from 'react-qr-reader';
 import React, { useState, useEffect } from 'react';
 import OnboardingModal from '@/components/OnboardingModal';
 import UserProfileModal from '@/components/UserProfileModal';
@@ -32,6 +33,8 @@ import AuthModal from '@/components/AuthModal';
 
 
 const Index: React.FC = () => {
+  const [showQrScanner, setShowQrScanner] = useState(false);
+  const [qrScanResult, setQrScanResult] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userPoints, setUserPoints] = useState<number>(0);
   const [events, setEvents] = useState<Event[]>([]);
@@ -354,6 +357,139 @@ const Index: React.FC = () => {
   if (loading) {
     return (
       <>
+        {/* Botón flotante para escanear QR */}
+        {currentUser && (
+          <button
+            onClick={() => setShowQrScanner(true)}
+            style={{
+              position: 'fixed',
+              bottom: 24,
+              right: 24,
+              zIndex: 50,
+              background: '#2563eb',
+              color: 'white',
+              borderRadius: '50%',
+              width: 56,
+              height: 56,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+            }}
+            title="Escanear QR para sumar puntos"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-7 h-7">
+              <rect x="3" y="3" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+              <rect x="14" y="3" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+              <rect x="14" y="14" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+              <rect x="3" y="14" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+            </svg>
+          </button>
+        )}
+
+        {/* Modal de escaneo QR */}
+        {showQrScanner && (
+          <Dialog open={showQrScanner} onOpenChange={setShowQrScanner}>
+            <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
+              <DialogHeader>
+                <DialogTitle>Escanear QR de evento</DialogTitle>
+              </DialogHeader>
+              <div className="my-4 flex flex-col items-center">
+                <QrReader
+                  delay={300}
+                  onError={err => alert('Error al acceder a la cámara: ' + err)}
+                  onScan={data => {
+                    if (data) {
+                      setQrScanResult(data);
+                      setShowQrScanner(false);
+                    }
+                  }}
+                  style={{ width: '100%' }}
+                />
+                <p className="mt-4 text-center text-gray-700 text-sm">Apunta la cámara al QR del evento para registrar tu asistencia y sumar puntos.</p>
+              </div>
+              <Button onClick={() => setShowQrScanner(false)} className="mt-2">Cerrar</Button>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {/* Mostrar resultado del escaneo y procesar QR */}
+        {qrScanResult && (
+          <Dialog open={!!qrScanResult} onOpenChange={() => setQrScanResult(null)}>
+            <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
+              <DialogHeader>
+                <DialogTitle>Resultado del escaneo</DialogTitle>
+              </DialogHeader>
+              <div className="my-4 flex flex-col items-center">
+                {(() => {
+                  let parsed: any = null;
+                  try {
+                    parsed = JSON.parse(qrScanResult);
+                  } catch {
+                    return <p className="text-red-600">QR inválido</p>;
+                  }
+                  if (!parsed?.eventId) {
+                    return <p className="text-red-600">QR inválido</p>;
+                  }
+                  const event = events.find(e => e.id === parsed.eventId);
+                  if (!event) {
+                    return <p className="text-red-600">Evento no encontrado</p>;
+                  }
+                  // Validar si ya asistió
+                  // Validar duplicado en Supabase
+                  if (supabaseConnected) {
+                    const [alreadyRegistered, setAlreadyRegistered] = React.useState<boolean | null>(null);
+                    const [feedback, setFeedback] = React.useState<string | null>(null);
+                    React.useEffect(() => {
+                      (async () => {
+                        // Buscar si ya existe registro de puntos para este usuario y evento
+                        const { data, error } = await supabase
+                          .from('app_f6e77dc63_puntos_evento')
+                          .select('id')
+                          .eq('usuario_id', currentUser.id)
+                          .eq('evento_id', event.id)
+                          .maybeSingle();
+                        if (data) {
+                          setAlreadyRegistered(true);
+                          setFeedback('¡Ya registraste tu asistencia a este evento! No puedes escanearlo dos veces.');
+                        } else {
+                          // Registrar asistencia y puntos
+                          event.attendees = [...(event.attendees || []), currentUser.id];
+                          await supabaseManager.updateEvent(event);
+                          await supabase
+                            .from('app_f6e77dc63_puntos_evento')
+                            .insert({
+                              usuario_id: currentUser.id,
+                              evento_id: event.id,
+                              puntos_obtenidos: event.puntos || 0,
+                              fecha_asistencia: new Date().toISOString(),
+                              qr_validado: true,
+                              estado: 'activo',
+                              created_at: new Date().toISOString()
+                            });
+                          setAlreadyRegistered(false);
+                          setFeedback('¡Asistencia registrada! Puntos sumados: ' + (event.puntos || 0));
+                        }
+                      })();
+                    }, []);
+                    return <p className={alreadyRegistered ? "text-green-600 font-semibold" : "text-green-600 font-semibold"}>{feedback || 'Procesando...'}</p>;
+                  } else {
+                    // LocalStorage
+                    if (event.attendees?.includes(currentUser.id)) {
+                      return <p className="text-green-600 font-semibold">¡Ya registraste tu asistencia a este evento!<br/>Puntos: {event.puntos || 0}</p>;
+                    }
+                    event.attendees = [...(event.attendees || []), currentUser.id];
+                    const updatedEvents = events.map(e => e.id === event.id ? event : e);
+                    localStorage.setItem('enterate-events', JSON.stringify(updatedEvents));
+                    setEvents(updatedEvents);
+                    return <p className="text-green-600 font-semibold">¡Asistencia registrada!<br/>Puntos sumados: {event.puntos || 0}</p>;
+                  }
+                })()}
+              </div>
+              <Button onClick={() => setQrScanResult(null)} className="mt-2">Cerrar</Button>
+            </DialogContent>
+          </Dialog>
+        )}
         {showOnboarding && (
           <OnboardingModal isOpen={showOnboarding} onClose={handleCloseOnboarding} />
         )}
