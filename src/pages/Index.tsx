@@ -1,4 +1,5 @@
-import QrReader from 'react-qr-reader';
+import { useRef, useEffect } from 'react';
+import { Html5Qrcode } from 'html5-qrcode';
 import React, { useState, useEffect } from 'react';
 import OnboardingModal from '@/components/OnboardingModal';
 import UserProfileModal from '@/components/UserProfileModal';
@@ -35,6 +36,8 @@ import AuthModal from '@/components/AuthModal';
 const Index: React.FC = () => {
   const [showQrScanner, setShowQrScanner] = useState(false);
   const [qrScanResult, setQrScanResult] = useState<string | null>(null);
+  const qrRef = useRef<HTMLDivElement>(null);
+  const html5QrInstance = useRef<any>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userPoints, setUserPoints] = useState<number>(0);
   const [events, setEvents] = useState<Event[]>([]);
@@ -388,31 +391,44 @@ const Index: React.FC = () => {
         )}
 
         {/* Modal de escaneo QR */}
-        {showQrScanner && (
-          <Dialog open={showQrScanner} onOpenChange={setShowQrScanner}>
-            <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
-              <DialogHeader>
-                <DialogTitle>Escanear QR de evento</DialogTitle>
-              </DialogHeader>
-              <div className="my-4 flex flex-col items-center">
-                <QrReader
-                  delay={300}
-                  onError={err => alert('Error al acceder a la cámara: ' + err)}
-                  onScan={data => {
-                    if (data) {
-                      setQrScanResult(data);
-                      setShowQrScanner(false);
-                    }
-                  }}
-                  style={{ width: '100%' }}
-                />
-                <p className="mt-4 text-center text-gray-700 text-sm">Apunta la cámara al QR del evento para registrar tu asistencia y sumar puntos.</p>
-              </div>
-              <Button onClick={() => setShowQrScanner(false)} className="mt-2">Cerrar</Button>
-            </DialogContent>
-          </Dialog>
-        )}
+      {showQrScanner && (
+        <Dialog open={showQrScanner} onOpenChange={setShowQrScanner}>
+          <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
+            <DialogHeader>
+              <DialogTitle>Escanear QR de evento</DialogTitle>
+            </DialogHeader>
+            <div className="my-4 flex flex-col items-center w-full">
+              <div ref={qrRef} id="qr-reader" style={{ width: 280, height: 280 }} />
+              <p className="mt-4 text-center text-gray-700 text-sm">Apunta la cámara al QR del evento para registrar tu asistencia y sumar puntos.</p>
+            </div>
+            <Button onClick={() => setShowQrScanner(false)} className="mt-2">Cerrar</Button>
+          </DialogContent>
+        </Dialog>
+      )}
 
+      {/* Lógica de inicialización y limpieza del escáner html5-qrcode */}
+      {showQrScanner && useEffect(() => {
+        if (!qrRef.current) return;
+        if (html5QrInstance.current) return;
+        html5QrInstance.current = new Html5Qrcode("qr-reader");
+        html5QrInstance.current.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: 250 },
+          (decodedText: string) => {
+            setQrScanResult(decodedText);
+            setShowQrScanner(false);
+            html5QrInstance.current.stop().then(() => html5QrInstance.current.clear());
+            html5QrInstance.current = null;
+          },
+          (error: any) => {}
+        );
+        return () => {
+          if (html5QrInstance.current) {
+            html5QrInstance.current.stop().then(() => html5QrInstance.current.clear());
+            html5QrInstance.current = null;
+          }
+        };
+      }, [showQrScanner])}
         {/* Mostrar resultado del escaneo y procesar QR */}
         {qrScanResult && (
           <Dialog open={!!qrScanResult} onOpenChange={() => setQrScanResult(null)}>
