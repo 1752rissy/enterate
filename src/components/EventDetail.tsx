@@ -317,127 +317,111 @@ const EventDetail: React.FC<EventDetailProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
-        <div className="flex flex-col h-full">
-          {/* Header with close button */}
-          <DialogHeader className="p-4 sm:p-6 border-b flex-shrink-0">
-            <DialogTitle className="text-xl sm:text-2xl font-bold pr-4 line-clamp-2">
-              {event.title}
-            </DialogTitle>
-          </DialogHeader>
 
-          {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-4 sm:p-6 space-y-6">
-              {/* Event Image */}
-              {(event.imageUrl || event.image) && (
-                <div className="w-full h-48 sm:h-64 md:h-80 rounded-lg overflow-hidden bg-gray-200">
-                  <img
-                    src={event.imageUrl || event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-
-              {/* Event Info Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 overflow-y-auto max-h-[80vh]" style={{ WebkitOverflowScrolling: 'touch' }}>
-                {/* Left Column - Event Details */}
-                <div className="space-y-4">
-                  <div>
-                    <Badge variant="secondary" className="mb-3">
-                      {event.category}
-                    </Badge>
-                    <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-2">
-                      {event.description}
-                    </p>
-                    {/* Puntos destacados en la descripción */}
-                    <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-yellow-50 rounded-full w-fit">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-yellow-500">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#FACC15" />
-                        <text x="12" y="16" textAnchor="middle" fontSize="12" fill="#B45309" fontWeight="bold">★</text>
-                      </svg>
-                      <span className="font-semibold text-yellow-700 text-sm">{event.puntos || 0} pts</span>
-                      <span className="text-xs text-yellow-800 ml-2">Puntos que obtendrás por asistir.</span>
-                    </div>
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
+          <div className="flex flex-col h-full">
+            {/* Header with close button */}
+            <DialogHeader className="p-4 sm:p-6 border-b flex-shrink-0">
+              <DialogTitle className="text-xl sm:text-2xl font-bold pr-4 line-clamp-2">
+                {event.title}
+              </DialogTitle>
+            </DialogHeader>
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-4 sm:p-6 space-y-6">
+                {(event.imageUrl || event.image) && (
+                  <div className="w-full h-48 sm:h-64 md:h-80 rounded-lg overflow-hidden bg-gray-200">
+                    <img
+                      src={event.imageUrl || event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-
-                  {/* Event Meta Info */}
-                  <div className="space-y-3">
-                    <div className="flex items-center text-gray-600">
-                      <Calendar className="w-4 h-4 mr-3 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">{formatDate(event.date)}</span>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 overflow-y-auto max-h-[80vh]" style={{ WebkitOverflowScrolling: 'touch' }}>
+                  <div className="space-y-4">
+                    <div>
+                      <Badge variant="secondary" className="mb-3">
+                        {event.category}
+                      </Badge>
+                      <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-2">
+                        {event.description}
+                      </p>
+                      <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-yellow-50 rounded-full w-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-yellow-500">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#FACC15" />
+                          <text x="12" y="16" textAnchor="middle" fontSize="12" fill="#B45309" fontWeight="bold">★</text>
+                        </svg>
+                        <span className="font-semibold text-yellow-700 text-sm">{event.puntos || 0} pts</span>
+                        <span className="text-xs text-yellow-800 ml-2">Puntos que obtendrás por asistir.</span>
+                      </div>
                     </div>
-
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="w-4 h-4 mr-3 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">
-                        {formatTime(event.time)}
-                        {event.end_time && event.end_time !== event.time && (
-                          <>
-                            {' '}<span className="mx-1">a</span>{formatTime(event.end_time)}
-                          </>
-                        )}
-                      </span>
-                    </div>
-
-                    <div className="flex items-start text-gray-600">
-                      <MapPin className="w-4 h-4 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">{event.location}</span>
-                    </div>
-
-                    {event.price !== undefined && event.price > 0 && (
+                    <div className="space-y-3">
                       <div className="flex items-center text-gray-600">
-                        <DollarSign className="w-4 h-4 mr-3 flex-shrink-0" />
-                        <span className="text-sm sm:text-base font-semibold">
-                          ${event.price} ARS
+                        <Calendar className="w-4 h-4 mr-3 flex-shrink-0" />
+                        <span className="text-sm sm:text-base">{formatDate(event.date)}</span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="w-4 h-4 mr-3 flex-shrink-0" />
+                        <span className="text-sm sm:text-base">
+                          {formatTime(event.time)}
+                          {event.end_time && event.end_time !== event.time && (
+                            <>
+                              {' '}<span className="mx-1">a</span>{formatTime(event.end_time)}
+                            </>
+                          )}
                         </span>
                       </div>
-                    )}
-
-                    {event.price === 0 && (
-                      <div className="flex items-center text-green-600">
-                        <CheckCircle className="w-4 h-4 mr-3 flex-shrink-0" />
-                        <span className="text-sm sm:text-base font-semibold">
-                          Evento Gratuito
+                      <div className="flex items-start text-gray-600">
+                        <MapPin className="w-4 h-4 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm sm:text-base">{event.location}</span>
+                      </div>
+                      {event.price !== undefined && event.price > 0 && (
+                        <div className="flex items-center text-gray-600">
+                          <DollarSign className="w-4 h-4 mr-3 flex-shrink-0" />
+                          <span className="text-sm sm:text-base font-semibold">
+                            ${event.price} ARS
+                          </span>
+                        </div>
+                      )}
+                      {event.price === 0 && (
+                        <div className="flex items-center text-green-600">
+                          <CheckCircle className="w-4 h-4 mr-3 flex-shrink-0" />
+                          <span className="text-sm sm:text-base font-semibold">
+                            Evento Gratuito
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex items-center text-gray-600">
+                        <UserIcon className="w-4 h-4 mr-3 flex-shrink-0" />
+                        <span className="text-sm sm:text-base">
+                          Organizado por {event.organizerName}
                         </span>
                       </div>
-                    )}
-
-                    <div className="flex items-center text-gray-600">
-                      <UserIcon className="w-4 h-4 mr-3 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">
-                        Organizado por {event.organizerName}
-                      </span>
                     </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  {currentUser && (
-                    <div className="flex flex-col gap-3 pt-4">
-                      <div className="flex flex-col sm:flex-row gap-3 items-center">
-                        <Button
-                          onClick={handleLike}
-                          disabled={loading}
-                          variant={isLiked ? "default" : "outline"}
-                          className={`flex-1 ${isLiked ? 'bg-red-500 hover:bg-red-600 text-white' : ''}`}
-                        >
-                          <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-white' : ''}`} />
-                          {isLiked ? 'Te gusta' : 'Me gusta'} ({likesCount})
-                        </Button>
-
-                        <Button
-                          onClick={handleAttendance}
-                          disabled={loading}
-                          variant={isAttending ? "default" : "outline"}
-                          className={`flex-1 ${isAttending ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
-                        >
-                          <Users className={`w-4 h-4 mr-2 ${isAttending ? 'text-white' : ''}`} />
-                          {isAttending ? 'Asistiré' : 'Asistiré'} ({attendeesCount})
-                        </Button>
-
-                        <div className="flex items-center gap-2">
+                    {currentUser && (
+                      <div className="flex flex-col gap-3 pt-4">
+                        <div className="flex flex-col sm:flex-row gap-3 items-center">
+                          <Button
+                            onClick={handleLike}
+                            disabled={loading}
+                            variant={isLiked ? "default" : "outline"}
+                            className={`flex-1 ${isLiked ? 'bg-red-500 hover:bg-red-600 text-white' : ''}`}
+                          >
+                            <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current text-white' : ''}`} />
+                            {isLiked ? 'Te gusta' : 'Me gusta'} ({likesCount})
+                          </Button>
+                          <Button
+                            onClick={handleAttendance}
+                            disabled={loading}
+                            variant={isAttending ? "default" : "outline"}
+                            className={`flex-1 ${isAttending ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
+                          >
+                            <Users className={`w-4 h-4 mr-2 ${isAttending ? 'text-white' : ''}`} />
+                            {isAttending ? 'Asistiré' : 'Asistiré'} ({attendeesCount})
+                          </Button>
                           <Button
                             type="button"
                             className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded px-4 py-2"
@@ -446,242 +430,235 @@ const EventDetail: React.FC<EventDetailProps> = ({
                             <MessageCircle className="w-5 h-5" />
                             <span className="ml-1 text-sm font-semibold text-gray-700">{comments.length}</span>
                           </Button>
-                        {/* Botones de editar/eliminar solo para el creador */}
-                        {event.createdBy === currentUser.id && (
-                          <>
-                            <Button
-                              type="button"
-                              className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded px-3 py-2"
-                              onClick={() => { setEditEventData(event); setIsEditModalOpen(true); }}
-                              disabled={editLoading}
-                            >
-                              Editar
-                            </Button>
-                            <Button
-                              type="button"
-                              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2"
-                              onClick={async () => {
-                                if (window.confirm('¿Seguro que deseas eliminar este evento? Esta acción no se puede deshacer.')) {
-                                  setEditLoading(true);
-                                  try {
-                                    if (supabaseConnected) {
-                                      await supabaseManager.deleteEvent(event.id);
-                                    } else {
-                                      // Local
-                                      const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
-                                      const filtered = events.filter((e: Event) => e.id !== event.id);
-                                      localStorage.setItem('enterate-events', JSON.stringify(filtered));
+                          {event.createdBy === currentUser.id && (
+                            <div className="flex flex-wrap gap-2">
+                              <Button
+                                type="button"
+                                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded px-3 py-2"
+                                onClick={() => { setEditEventData(event); setIsEditModalOpen(true); }}
+                                disabled={editLoading}
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                type="button"
+                                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2"
+                                onClick={async () => {
+                                  if (window.confirm('¿Seguro que deseas eliminar este evento? Esta acción no se puede deshacer.')) {
+                                    setEditLoading(true);
+                                    try {
+                                      if (supabaseConnected) {
+                                        await supabaseManager.deleteEvent(event.id);
+                                      } else {
+                                        const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
+                                        const filtered = events.filter((e: Event) => e.id !== event.id);
+                                        localStorage.setItem('enterate-events', JSON.stringify(filtered));
+                                      }
+                                      onEventUpdate();
+                                      onClose();
+                                    } catch (err) {
+                                      alert('Error al eliminar el evento.');
+                                    } finally {
+                                      setEditLoading(false);
                                     }
-                                    onEventUpdate();
-                                    onClose();
-                                  } catch (err) {
-                                    alert('Error al eliminar el evento.');
-                                  } finally {
-                                    setEditLoading(false);
                                   }
-                                }
-                              }}
-                              disabled={editLoading}
-                            >
-                              Eliminar
-                            </Button>
-                            <Button
-                              type="button"
-                              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2"
-                              onClick={() => setShowQR(true)}
-                            >
-                              Generar QR
-                            </Button>
-                          </>
-                        )}
-      {/* Modal para mostrar QR */}
-      {showQR && (
-        <Dialog open={showQR} onOpenChange={setShowQR}>
-          <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
-            <DialogHeader>
-              <DialogTitle>QR para asistencia</DialogTitle>
-            </DialogHeader>
-            <div className="my-4 flex flex-col items-center">
-              <QRCode value={JSON.stringify({ eventId: event.id })} size={200} />
-              <p className="mt-4 text-center text-gray-700 text-sm">Escanea este código para registrar asistencia y sumar puntos.</p>
-            </div>
-            <Button onClick={() => setShowQR(false)} className="mt-2">Cerrar</Button>
-          </DialogContent>
-        </Dialog>
-      )}
+                                }}
+                                disabled={editLoading}
+                              >
+                                Eliminar
+                              </Button>
+                              <Button
+                                type="button"
+                                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2"
+                                onClick={() => setShowQR(true)}
+                              >
+                                Generar QR
+                              </Button>
+                            </div>
+                          )}
+                          <Button
+                            type="button"
+                            className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
+                            onClick={() => {
+                              const eventUrl = `${window.location.origin}/evento/${event.id}`;
+                              const shareText = `¡Mirá este evento en Entérate!\n${event.title}\n${event.description}\n${eventUrl}`;
+                              window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+                            }}
+                          >
+                            <Share2 className="w-4 h-4" />
+                            Compartir por WhatsApp
+                          </Button>
+                          {showQR && (
+                            <Dialog open={showQR} onOpenChange={setShowQR}>
+                              <DialogContent className="max-w-md w-full p-6 flex flex-col items-center">
+                                <DialogHeader>
+                                  <DialogTitle>QR para asistencia</DialogTitle>
+                                </DialogHeader>
+                                <div className="my-4 flex flex-col items-center">
+                                  <QRCode value={JSON.stringify({ eventId: event.id })} size={200} />
+                                  <p className="mt-4 text-center text-gray-700 text-sm">Escanea este código para registrar asistencia y sumar puntos.</p>
+                                </div>
+                                <Button onClick={() => setShowQR(false)} className="mt-2">Cerrar</Button>
+                              </DialogContent>
+                            </Dialog>
+                          )}
+                          {isEditModalOpen && editEventData && (
+                            <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+                              <DialogContent className="max-w-lg w-full p-4">
+                                <DialogHeader>
+                                  <DialogTitle>Editar Evento</DialogTitle>
+                                </DialogHeader>
+                                <form
+                                  onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    setEditLoading(true);
+                                    try {
+                                      const updated: Event = { ...editEventData };
+                                      if (supabaseConnected) {
+                                        await supabaseManager.updateEvent(updated);
+                                      } else {
+                                        const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
+                                        const idx = events.findIndex((ev: Event) => ev.id === updated.id);
+                                        if (idx > -1) { events[idx] = updated; }
+                                        localStorage.setItem('enterate-events', JSON.stringify(events));
+                                      }
+                                      onEventUpdate();
+                                      setIsEditModalOpen(false);
+                                    } catch (err) {
+                                      alert('Error al actualizar el evento.');
+                                    } finally {
+                                      setEditLoading(false);
+                                    }
+                                  }}
+                                  className="space-y-4"
+                                >
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.title}
+                                    onChange={e => setEditEventData({ ...editEventData, title: e.target.value })}
+                                    placeholder="Título"
+                                    required
+                                  />
+                                  <textarea
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.description}
+                                    onChange={e => setEditEventData({ ...editEventData, description: e.target.value })}
+                                    placeholder="Descripción"
+                                    required
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.date}
+                                    onChange={e => setEditEventData({ ...editEventData, date: e.target.value })}
+                                    placeholder="Fecha"
+                                    required
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.time}
+                                    onChange={e => setEditEventData({ ...editEventData, time: e.target.value })}
+                                    placeholder="Hora"
+                                    required
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.location}
+                                    onChange={e => setEditEventData({ ...editEventData, location: e.target.value })}
+                                    placeholder="Ubicación"
+                                    required
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.category}
+                                    onChange={e => setEditEventData({ ...editEventData, category: e.target.value })}
+                                    placeholder="Categoría"
+                                    required
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.imageUrl || ''}
+                                    onChange={e => setEditEventData({ ...editEventData, imageUrl: e.target.value })}
+                                    placeholder="URL de imagen"
+                                  />
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editEventData.price || ''}
+                                    onChange={e => setEditEventData({ ...editEventData, price: Number(e.target.value) })}
+                                    placeholder="Precio"
+                                    type="number"
+                                    min="0"
+                                  />
+                                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={editLoading}>
+                                    {editLoading ? 'Guardando...' : 'Guardar cambios'}
+                                  </Button>
+                                </form>
+                              </DialogContent>
+                            </Dialog>
+                          )}
                         </div>
                       </div>
-                      <Button
-      {/* Modal de edición de evento */}
-      {isEditModalOpen && editEventData && (
-        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-          <DialogContent className="max-w-lg w-full p-4">
-            <DialogHeader>
-              <DialogTitle>Editar Evento</DialogTitle>
-            </DialogHeader>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setEditLoading(true);
-                try {
-                  const updated: Event = { ...editEventData };
-                  if (supabaseConnected) {
-                    await supabaseManager.updateEvent(updated);
-                  } else {
-                    // Local
-                    const events = JSON.parse(localStorage.getItem('enterate-events') || '[]');
-                    const idx = events.findIndex((ev: Event) => ev.id === updated.id);
-                    if (idx > -1) { events[idx] = updated; }
-                    localStorage.setItem('enterate-events', JSON.stringify(events));
-                  }
-                  onEventUpdate();
-                  setIsEditModalOpen(false);
-                } catch (err) {
-                  alert('Error al actualizar el evento.');
-                } finally {
-                  setEditLoading(false);
-                }
-              }}
-              className="space-y-4"
-            >
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.title}
-                onChange={e => setEditEventData({ ...editEventData, title: e.target.value })}
-                placeholder="Título"
-                required
-              />
-              <textarea
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.description}
-                onChange={e => setEditEventData({ ...editEventData, description: e.target.value })}
-                placeholder="Descripción"
-                required
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.date}
-                onChange={e => setEditEventData({ ...editEventData, date: e.target.value })}
-                placeholder="Fecha"
-                required
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.time}
-                onChange={e => setEditEventData({ ...editEventData, time: e.target.value })}
-                placeholder="Hora"
-                required
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.location}
-                onChange={e => setEditEventData({ ...editEventData, location: e.target.value })}
-                placeholder="Ubicación"
-                required
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.category}
-                onChange={e => setEditEventData({ ...editEventData, category: e.target.value })}
-                placeholder="Categoría"
-                required
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.imageUrl || ''}
-                onChange={e => setEditEventData({ ...editEventData, imageUrl: e.target.value })}
-                placeholder="URL de imagen"
-              />
-              <input
-                className="w-full border rounded px-3 py-2"
-                value={editEventData.price || ''}
-                onChange={e => setEditEventData({ ...editEventData, price: Number(e.target.value) })}
-                placeholder="Precio"
-                type="number"
-                min="0"
-              />
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={editLoading}>
-                {editLoading ? 'Guardando...' : 'Guardar cambios'}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
-                        type="button"
-                        className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 mt-2"
-                        onClick={() => {
-                          const eventUrl = `${window.location.origin}/evento/${event.id}`;
-                          const shareText = `¡Mirá este evento en Entérate!\n${event.title}\n${event.description}\n${eventUrl}`;
-                          window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
-                        }}
-                      >
-                        <Share2 className="w-4 h-4" />
-                        Compartir por WhatsApp
-                      </Button>
-                    </div>
-                  )}
-
-                  {!currentUser && (
-                    <Alert className="border-blue-200 bg-blue-50">
-                      <AlertCircle className="h-4 w-4 text-blue-600" />
-                      <AlertDescription className="text-blue-800">
-                        Inicia sesión para dar like y confirmar asistencia
-                      </AlertDescription>
-                    </Alert>
-                  )}
+                    )}
+                    {!currentUser && (
+                      <Alert className="border-blue-200 bg-blue-50">
+                        <AlertCircle className="h-4 w-4 text-blue-600" />
+                        <AlertDescription className="text-blue-800">
+                          Inicia sesión para dar like y confirmar asistencia
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
                 </div>
-
-                {/* Sección de comentarios movida a un modal aparte */}
-                {showComments && (
-                  <Dialog open={showComments} onOpenChange={setShowComments}>
-                    <DialogContent className="max-w-lg w-full p-4">
-                      <div className="flex items-center mb-4">
-                        <MessageCircle className="w-5 h-5 mr-2" />
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          Comentarios ({comments.length})
-                        </h3>
-                      </div>
-                      <EventMessages comments={comments} />
-                      <div className="mt-4">
-                        {currentUser ? (
-                          <div className="space-y-3">
-                            <Textarea
-                              placeholder="Escribe un comentario..."
-                              value={newComment}
-                              onChange={(e) => setNewComment(e.target.value)}
-                              className="resize-none"
-                              rows={3}
-                            />
-                            <Button
-                              onClick={handleAddComment}
-                              disabled={commentLoading || !newComment.trim()}
-                              size="sm"
-                              className="w-full sm:w-auto px-6 py-2 text-base sm:text-sm"
-                              style={{ minWidth: 120 }}
-                            >
-                              <Send className="w-4 h-4 mr-2" />
-                              {commentLoading ? 'Enviando...' : 'Enviar comentario'}
-                            </Button>
-                          </div>
-                        ) : (
-                          <Alert className="border-orange-200 bg-orange-50">
-                            <AlertCircle className="h-4 w-4 text-orange-600" />
-                            <AlertDescription className="text-orange-800">
-                              Inicia sesión para comentar
-                            </AlertDescription>
-                          </Alert>
-                        )}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                )}
               </div>
             </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      {/* Comments Modal */}
+      {showComments && (
+        <Dialog open={showComments} onOpenChange={setShowComments}>
+          <DialogContent className="max-w-lg w-full p-4">
+            <div className="flex items-center mb-4">
+              <MessageCircle className="w-5 h-5 mr-2" />
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                Comentarios ({comments.length})
+              </h3>
+            </div>
+            <EventMessages comments={comments} />
+            <div className="mt-4">
+              {currentUser ? (
+                <div className="space-y-3">
+                  <Textarea
+                    placeholder="Escribe un comentario..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="resize-none"
+                    rows={3}
+                  />
+                  <Button
+                    onClick={handleAddComment}
+                    disabled={commentLoading || !newComment.trim()}
+                    size="sm"
+                    className="w-full sm:w-auto px-6 py-2 text-base sm:text-sm"
+                    style={{ minWidth: 120 }}
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {commentLoading ? 'Enviando...' : 'Enviar comentario'}
+                  </Button>
+                </div>
+              ) : (
+                <Alert className="border-orange-200 bg-orange-50">
+                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                  <AlertDescription className="text-orange-800">
+                    Inicia sesión para comentar
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
-};
+}
 
 export default EventDetail;
