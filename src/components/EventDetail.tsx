@@ -431,10 +431,10 @@ const EventDetail: React.FC<EventDetailProps> = ({
                             <span className="ml-1 text-sm font-semibold text-gray-700">{comments.length}</span>
                           </Button>
                           {event.createdBy === currentUser.id && (
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-row gap-4 justify-start items-center mt-2 mb-4">
                               <Button
                                 type="button"
-                                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded px-3 py-2"
+                                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded px-5 py-2 font-semibold shadow-sm"
                                 onClick={() => { setEditEventData(event); setIsEditModalOpen(true); }}
                                 disabled={editLoading}
                               >
@@ -442,7 +442,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                               </Button>
                               <Button
                                 type="button"
-                                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2"
+                                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded px-5 py-2 font-semibold shadow-sm"
                                 onClick={async () => {
                                   if (window.confirm('¿Seguro que deseas eliminar este evento? Esta acción no se puede deshacer.')) {
                                     setEditLoading(true);
@@ -469,7 +469,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                               </Button>
                               <Button
                                 type="button"
-                                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2"
+                                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded px-5 py-2 font-semibold shadow-sm"
                                 onClick={() => setShowQR(true)}
                               >
                                 Generar QR
@@ -504,7 +504,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                           )}
                           {isEditModalOpen && editEventData && (
                             <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-                              <DialogContent className="max-w-lg w-full p-4">
+                              <DialogContent className="max-w-2xl w-full p-4">
                                 <DialogHeader>
                                   <DialogTitle>Editar Evento</DialogTitle>
                                 </DialogHeader>
@@ -532,13 +532,15 @@ const EventDetail: React.FC<EventDetailProps> = ({
                                   }}
                                   className="space-y-4"
                                 >
+                                  {/* Título */}
                                   <input
                                     className="w-full border rounded px-3 py-2"
                                     value={editEventData.title}
                                     onChange={e => setEditEventData({ ...editEventData, title: e.target.value })}
-                                    placeholder="Título"
+                                    placeholder="Título del evento"
                                     required
                                   />
+                                  {/* Descripción */}
                                   <textarea
                                     className="w-full border rounded px-3 py-2"
                                     value={editEventData.description}
@@ -546,20 +548,24 @@ const EventDetail: React.FC<EventDetailProps> = ({
                                     placeholder="Descripción"
                                     required
                                   />
-                                  <input
-                                    className="w-full border rounded px-3 py-2"
-                                    value={editEventData.date}
-                                    onChange={e => setEditEventData({ ...editEventData, date: e.target.value })}
-                                    placeholder="Fecha"
-                                    required
-                                  />
-                                  <input
-                                    className="w-full border rounded px-3 py-2"
-                                    value={editEventData.time}
-                                    onChange={e => setEditEventData({ ...editEventData, time: e.target.value })}
-                                    placeholder="Hora"
-                                    required
-                                  />
+                                  {/* Fecha y Hora */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <input
+                                      className="w-full border rounded px-3 py-2"
+                                      type="date"
+                                      value={editEventData.date}
+                                      onChange={e => setEditEventData({ ...editEventData, date: e.target.value })}
+                                      required
+                                    />
+                                    <input
+                                      className="w-full border rounded px-3 py-2"
+                                      type="time"
+                                      value={editEventData.time}
+                                      onChange={e => setEditEventData({ ...editEventData, time: e.target.value })}
+                                      required
+                                    />
+                                  </div>
+                                  {/* Ubicación */}
                                   <input
                                     className="w-full border rounded px-3 py-2"
                                     value={editEventData.location}
@@ -567,6 +573,7 @@ const EventDetail: React.FC<EventDetailProps> = ({
                                     placeholder="Ubicación"
                                     required
                                   />
+                                  {/* Categoría */}
                                   <input
                                     className="w-full border rounded px-3 py-2"
                                     value={editEventData.category}
@@ -574,12 +581,52 @@ const EventDetail: React.FC<EventDetailProps> = ({
                                     placeholder="Categoría"
                                     required
                                   />
+                                  {/* Imagen */}
+                                  <div className="space-y-2">
+                                    <label className="block font-medium">Imagen</label>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={async (e) => {
+                                        const file = e.target.files && e.target.files[0];
+                                        if (file) {
+                                          const reader = new FileReader();
+                                          reader.onload = (ev) => {
+                                            setEditEventData({ ...editEventData, imageUrl: ev.target?.result as string });
+                                          };
+                                          reader.readAsDataURL(file);
+                                        }
+                                      }}
+                                    />
+                                    {editEventData.imageUrl && (
+                                      <img src={editEventData.imageUrl} alt="Preview" className="w-full h-32 object-cover rounded-md mt-2" />
+                                    )}
+                                  </div>
+                                  {/* Puntos */}
                                   <input
                                     className="w-full border rounded px-3 py-2"
-                                    value={editEventData.imageUrl || ''}
-                                    onChange={e => setEditEventData({ ...editEventData, imageUrl: e.target.value })}
-                                    placeholder="URL de imagen"
+                                    type="number"
+                                    value={editEventData.puntos || 0}
+                                    onChange={e => setEditEventData({ ...editEventData, puntos: Number(e.target.value) })}
+                                    placeholder="Puntos por asistir"
+                                    min="0"
                                   />
+                                  {/* Asistentes */}
+                                  <input
+                                    className="w-full border rounded px-3 py-2"
+                                    type="number"
+                                    value={Array.isArray(editEventData.attendees) ? editEventData.attendees.length : 0}
+                                    onChange={e => {
+                                      const n = Number(e.target.value);
+                                      setEditEventData({
+                                        ...editEventData,
+                                        attendees: Array(n).fill('manual') // solo para edición visual, deberías ajustar la lógica real según tu backend
+                                      });
+                                    }}
+                                    placeholder="Cantidad de asistentes"
+                                    min="0"
+                                  />
+                                  {/* Precio */}
                                   <input
                                     className="w-full border rounded px-3 py-2"
                                     value={editEventData.price || ''}
